@@ -2,8 +2,9 @@ package de.teambuktu.ase;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TableLayout;
@@ -17,13 +18,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void addRow(boolean action) {
         TableLayout table;
-
         if (action) {
             table = findViewById(R.id.tableAction);
         }
         else {
             table = findViewById(R.id.tableCondition);
         }
+
         TableRow row = new TableRow(this);
         TextView column1 = new TextView(this);
         EditText column2 = new EditText(this);
@@ -76,23 +77,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
 
-        Button buttonAddActionRow = findViewById(R.id.buttonAddActionRow);
-        buttonAddActionRow.setOnClickListener( new View.OnClickListener() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
 
-            @Override
-            public void onClick(View view) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.buttonAddActionRow:
                 addRow(true);
-            }
-        });
-
-        Button buttonAddConditionRow = findViewById(R.id.buttonAddConditionRow);
-        buttonAddConditionRow.setOnClickListener( new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
+                return true;
+            case R.id.buttonAddConditionRow:
                 addRow(false);
-            }
-        });
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -3,4 +3,5 @@
     <string name="table">Auftragsannahme</string>
     <string name="addActionRow">Neue Aktion</string>
     <string name="addConditionRow">Neue Bedingung</string>
+    <string name="ruleCount">Anzahl der Regeln festlegen</string>
 </resources>
