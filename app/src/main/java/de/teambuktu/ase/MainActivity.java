@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
         col1.setIncludeFontPadding(true);
         col1.setPaddingRelative(50,50,0,50);
         row.addView(col1);
-        TextView col2 = new TextView(this);
-        col2.setText("Aktion");
+        EditText col2 = new EditText(this);
+        col2.setHint("Aktion");
         row.addView(col2);
         table.addView(row);
     }
