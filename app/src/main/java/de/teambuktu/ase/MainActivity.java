@@ -1,7 +1,10 @@
 package de.teambuktu.ase;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         columnText.setEms(6);
 
         CheckBox actionRule;
-        for (int i = 1; i < actionToAdd.rules.size(); i++) {
+        for (int i = 0; i < actionToAdd.rules.size(); i++) {
             actionRule = new CheckBox(this);
             actionRule.setTag(actionToAdd.ID + "-R" + i);
             actionRule.setChecked(actionToAdd.rules.get(i));
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         columnText.setEms(6);
 
         TextView conditionRule;
-        for (int i = 1; i < conditionToAdd.rules.size(); i++) {
+        for (int i = 0; i < conditionToAdd.rules.size(); i++) {
             conditionRule = new TextView(this);
             conditionRule.setTag(conditionToAdd.ID + "-R" + i);
             conditionRule.setText(conditionToAdd.rules.get(i));
@@ -111,8 +114,53 @@ public class MainActivity extends AppCompatActivity {
                 conditionList.add(condition);
                 addRow(condition);
                 return true;
+            case R.id.buttonRuleCount:
+                setNumberOfRules();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setNumberOfRules() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.ruleCount);
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+
+        builder.setPositiveButton("Anpassen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String text = input.getText().toString();
+                ruleCount = Integer.parseInt(text);
+
+                TableLayout actionTable = findViewById(R.id.tableAction);
+                actionTable.removeAllViews();
+                for (Action action : actionList) {
+                    action.setNumberOfRules(ruleCount);
+                    addRow(action);
+                }
+
+                TableLayout conditionTable = findViewById(R.id.tableCondition);
+                conditionTable.removeAllViews();
+                for (Condition condition : conditionList) {
+                    condition.setNumberOfRules(ruleCount);
+                    addRow(condition);
+                }
+
+                Toast.makeText(MainActivity.this, "Anzahl der Regeln auf " + text + " geändert", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 }
