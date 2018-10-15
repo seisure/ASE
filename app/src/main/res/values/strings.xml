@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">Advanced Software Engineering</string>
-    <string name="table">Tabellentitel</string>
-    <string name="addRow">Neue Zeile</string>
-    <string name="first_title">Erste Zeile</string>
-    <string name="first_content_1">Inhalt 1</string>
-    <string name="first_content_2">Inhalt 2</string>
-    <string name="first_content_3">Inhalt 3</string>
+    <string name="table">Auftragsannahme</string>
+    <string name="addActionRow">Neue Aktion</string>
+    <string name="addConditionRow">Neue Bedingung</string>
+    <string name="ruleCount">Anzahl der Regeln anpassen</string>
 </resources>
