@@ -10,67 +10,80 @@ import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     int actionCount = 0;
     int conditionCount = 0;
     int ruleCount = 3;
+    ArrayList<Action> actionList = new ArrayList<>();
+    ArrayList<Condition> conditionList = new ArrayList<>();
 
-    private void addRow(boolean action) {
+    private void addRow(Action actionToAdd) {
         TableLayout table;
-        if (action) {
-            table = findViewById(R.id.tableAction);
-        }
-        else {
-            table = findViewById(R.id.tableCondition);
-        }
+        table = findViewById(R.id.tableAction);
 
         TableRow row = new TableRow(this);
-        TextView column1 = new TextView(this);
-        EditText column2 = new EditText(this);
-
-        if (action) {
-            row.setTag("A" + actionCount++);
-            column1.setText("A" + actionCount);
-        }
-        else {
-            row.setTag("C" + conditionCount++);
-            column1.setText("B" + conditionCount);
-        }
-        column1.setEms(2);
-
-        column1.setIncludeFontPadding(true);
-        column1.setPadding(10,0,0,0);
-        row.addView(column1);
-
-        column2.setHint(action ? "Aktion" : "Bedingung");
-        column2.setEms(6);
-        row.addView(column2);
-
-        if (action) {
-            CheckBox actionRule;
-            for (int i = 1; i <= ruleCount; i++) {
-                actionRule = new CheckBox(this);
-                actionRule.setTag("A" + (conditionCount - 1) + "-R" + i);
-                actionRule.setEms(2);
-                row.addView(actionRule);
-            }
-        }
-        else {
-            TextView conditionRule;
-            for (int i = 1; i <= ruleCount; i++) {
-                conditionRule = new TextView(this);
-                conditionRule.setTag("C" + (conditionCount - 1) + "-R" + i);
-                conditionRule.setText("-");
-                conditionRule.setEms(2);
-                conditionRule.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                conditionRule.setClickable(true);
-                conditionRule.setFocusable(true);
-                row.addView(conditionRule);
-            }
-        }
+        row.setTag(actionToAdd.ID);
+        TextView columnID = new TextView(this);
+        EditText columnText = new EditText(this);
 
         table.addView(row);
+        row.addView(columnID);
+        row.addView(columnText);
+
+        columnID.setText(actionToAdd.ID);
+        columnID.setEms(2);
+        columnID.setIncludeFontPadding(true);
+        columnID.setPadding(10,0,0,0);
+
+        columnText.setHint("Aktion");
+        columnText.setEms(6);
+
+        CheckBox actionRule;
+        for (int i = 1; i < actionToAdd.rules.size(); i++) {
+            actionRule = new CheckBox(this);
+            actionRule.setTag(actionToAdd.ID + "-R" + i);
+            actionRule.setChecked(actionToAdd.rules.get(i));
+            actionRule.setEms(2);
+            row.addView(actionRule);
+        }
+    }
+
+    private void addRow(Condition conditionToAdd) {
+        TableLayout table;
+        table = findViewById(R.id.tableCondition);
+
+        TableRow row = new TableRow(this);
+        row.setTag(conditionToAdd.ID);
+        TextView columnID = new TextView(this);
+        EditText columnText = new EditText(this);
+
+        table.addView(row);
+        row.addView(columnID);
+        row.addView(columnText);
+
+        columnID.setText(conditionToAdd.ID);
+        columnID.setEms(2);
+        columnID.setIncludeFontPadding(true);
+        columnID.setPadding(10,0,0,0);
+
+        columnText.setHint("Bedingung");
+        columnText.setEms(6);
+
+        TextView conditionRule;
+        for (int i = 1; i < conditionToAdd.rules.size(); i++) {
+            conditionRule = new TextView(this);
+            conditionRule.setTag(conditionToAdd.ID + "-R" + i);
+            conditionRule.setText(conditionToAdd.rules.get(i));
+            conditionRule.setEms(2);
+            conditionRule.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            conditionRule.setClickable(true);
+            conditionRule.setFocusable(true);
+            row.addView(conditionRule);
+        }
     }
 
     @Override
@@ -89,10 +102,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.buttonAddActionRow:
-                addRow(true);
+                Action action = new Action("A" + actionCount++, ruleCount);
+                actionList.add(action);
+                addRow(action);
                 return true;
             case R.id.buttonAddConditionRow:
-                addRow(false);
+                Condition condition = new Condition("B" + conditionCount++, ruleCount);
+                conditionList.add(condition);
+                addRow(condition);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
