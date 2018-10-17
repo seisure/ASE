@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         columnID.setEms(2);
         columnID.setIncludeFontPadding(true);
         columnID.setPadding(10, 0, 0, 0);
-
         columnText.setHint("Bedingung");
         columnText.setEms(6);
 
@@ -167,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
 
         StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
         ArrayList<Action> actions = storageHelper.loadActions();

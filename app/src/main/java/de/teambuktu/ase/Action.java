@@ -11,6 +11,7 @@ class Action {
     protected ArrayList<Boolean> rules = new ArrayList<>();
 
     public Action(int ruleCount) {
+
         for (int i = 0; i < ruleCount; i++) {
             rules.add(false);
         }
