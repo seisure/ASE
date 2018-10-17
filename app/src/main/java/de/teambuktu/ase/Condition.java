@@ -14,12 +14,10 @@ import java.util.Set;
 import static android.content.Context.MODE_PRIVATE;
 
 class Condition {
-    protected int ID;
     protected String title;
     protected ArrayList<String> rules = new ArrayList<>();
 
-    public Condition(int id, int ruleCount) {
-        ID = id;
+    public Condition(int ruleCount) {
         for (int i = 0; i < ruleCount; i++) {
             rules.add("-");
         }
@@ -44,10 +42,9 @@ class Condition {
             String title = null;
             int ID = -1;
             if (json.has("title")) title = json.getString("title");
-            if (json.has("ID")) ID = json.getInt("ID");
             if (json.has("rules")) {
                 JSONArray rulesJson = json.getJSONArray("rules");
-                condition = new Condition(ID, rulesJson.length());
+                condition = new Condition(rulesJson.length());
                 condition.rules = new ArrayList<>();
                 for (int i = 0; i < rulesJson.length(); i++) {
                     condition.rules.add((String) rulesJson.get(i));
@@ -64,7 +61,7 @@ class Condition {
     public JSONObject toJSON() {
         try {
             JSONObject json = new JSONObject();
-            json.put("ID", this.ID);
+            json.put("hash", hashCode());
             json.put("title", this.title);
             JSONArray jsonArray = new JSONArray(this.rules);
             json.put("rules", jsonArray);

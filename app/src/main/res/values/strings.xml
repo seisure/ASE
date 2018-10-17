@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">Advanced Software Engineering</string>
+    <string name="dialog_yes">Ja</string>
+    <string name="dialog_no">Nein</string>
     <string name="table">Auftragsannahme</string>
     <string name="addActionRow">Neue Aktion</string>
     <string name="addConditionRow">Neue Bedingung</string>
     <string name="ruleCount">Anzahl der Regeln anpassen</string>
+    <string name="clearTable">Alles löschen</string>
+    <string name="clearTableAskFor">Sollen alle Tabelleninhalte gelöscht werden?</string>
+    <string name="clearTableSuccess">Tabelle wurde gelöscht</string>
 </resources>
