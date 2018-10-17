@@ -1,10 +1,12 @@
 package de.teambuktu.ase;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.InputType;
+import android.util.SparseIntArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     int actionCount = 0;
@@ -37,10 +44,10 @@ public class MainActivity extends AppCompatActivity {
         row.addView(columnID);
         row.addView(columnText);
 
-        columnID.setText(actionToAdd.ID);
+        columnID.setText("A" + actionToAdd.ID);
         columnID.setEms(2);
         columnID.setIncludeFontPadding(true);
-        columnID.setPadding(10,0,0,0);
+        columnID.setPadding(10, 0, 0, 0);
 
         columnText.setHint("Aktion");
         columnText.setEms(6);
@@ -68,10 +75,10 @@ public class MainActivity extends AppCompatActivity {
         row.addView(columnID);
         row.addView(columnText);
 
-        columnID.setText(conditionToAdd.ID);
+        columnID.setText("B" + conditionToAdd.ID);
         columnID.setEms(2);
         columnID.setIncludeFontPadding(true);
-        columnID.setPadding(10,0,0,0);
+        columnID.setPadding(10, 0, 0, 0);
 
         columnText.setHint("Bedingung");
         columnText.setEms(6);
@@ -93,6 +100,44 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences sharedPreferences = this.getApplicationContext().getSharedPreferences("DE.TEAMBUKTU.ASE", MODE_PRIVATE);
+        Set<String> actionSet = sharedPreferences.getStringSet("actions", null);
+        Set<String> conditionSet = sharedPreferences.getStringSet("conditions", null);
+
+        if (actionSet != null) {
+            HashMap<Integer, Action> actionHashMap = new HashMap<>();
+            Iterator<String> iterator = actionSet.iterator();
+            while (iterator.hasNext()) {
+                String actionAsString = iterator.next();
+                Action action = Action.fromString(actionAsString);
+                actionHashMap.put(action.ID, action);
+            }
+            this.actionCount = actionHashMap.values().size();
+            Iterator<Action> actionIterator = actionHashMap.values().iterator();
+            while(actionIterator.hasNext()) {
+                Action currentAction = actionIterator.next();
+                this.actionList.add(currentAction);
+                addRow(currentAction);
+            }
+        }
+        if (conditionSet != null) {
+            HashMap<Integer, Condition> conditionHashMap = new HashMap<>();
+            Iterator<String> iterator = conditionSet.iterator();
+            while (iterator.hasNext()) {
+                String conditionAsString = iterator.next();
+                Condition condition = Condition.fromString(conditionAsString);
+                conditionHashMap.put(condition.ID, condition);
+            }
+
+            this.conditionCount = conditionHashMap.size();
+            Iterator<Condition> conditionIterator = conditionHashMap.values().iterator();
+            while(conditionIterator.hasNext()) {
+                Condition currentCondition = conditionIterator.next();
+                this.conditionList.add(currentCondition);
+                addRow(currentCondition);
+            }
+        }
     }
 
     @Override
@@ -105,12 +150,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.buttonAddActionRow:
-                Action action = new Action("A" + actionCount++, ruleCount);
+                Action action = new Action(actionCount++, ruleCount);
+                action.store(this.getApplicationContext());
                 actionList.add(action);
                 addRow(action);
                 return true;
             case R.id.buttonAddConditionRow:
-                Condition condition = new Condition("B" + conditionCount++, ruleCount);
+                Condition condition = new Condition(conditionCount++, ruleCount);
+                condition.store(this.getApplicationContext());
                 conditionList.add(condition);
                 addRow(condition);
                 return true;
