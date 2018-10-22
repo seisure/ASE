@@ -3,17 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/buttonAddConditionRow"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/addConditionRow" />
-    <item
         android:id="@+id/buttonAddActionRow"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/addActionRow" />
+        android:title="@string/addActionRow"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/buttonAddConditionRow"
+        android:title="@string/addConditionRow"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/buttonAddRuleColumn"
+        android:title="@string/addRuleColumn"
+        app:showAsAction="always" />
     <item
         android:id="@+id/buttonRuleCount"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/ruleCount" />
+    <item
+        android:id="@+id/buttonCreatenitialTable"
+        android:icon="@android:drawable/ic_input_add"
+        android:title="@string/createInitialTable" />
     <item
         android:id="@+id/buttonClearTable"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
