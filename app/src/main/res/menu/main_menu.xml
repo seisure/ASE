@@ -14,4 +14,8 @@
         android:id="@+id/buttonRuleCount"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/ruleCount" />
+    <item
+        android:id="@+id/buttonClearTable"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="@string/clearTable" />
 </menu>

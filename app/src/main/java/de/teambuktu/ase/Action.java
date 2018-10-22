@@ -1,14 +1,17 @@
 package de.teambuktu.ase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 class Action {
-    protected String ID;
     protected String title;
     protected ArrayList<Boolean> rules = new ArrayList<>();
 
-    public Action (String id, int ruleCount) {
-        ID = id;
+    public Action(int ruleCount) {
+
         for (int i = 0; i < ruleCount; i++) {
             rules.add(false);
         }
@@ -19,11 +22,47 @@ class Action {
             for (int i = rules.size() - 1; i < count - 1; i++) {
                 rules.add(false);
             }
-        }
-        else if (count < rules.size()) {
+        } else if (count < rules.size()) {
             for (int i = rules.size() - 1; i >= count; i--) {
                 rules.remove(i);
             }
         }
+    }
+
+    public static Action fromString(String serialized) {
+        try {
+            JSONObject json = new JSONObject(serialized);
+            Action action = null;
+            String title = null;
+            int ID = -1;
+            if (json.has("title")) title = json.getString("title");
+            if (json.has("rules")) {
+                JSONArray rulesJson = json.getJSONArray("rules");
+                action = new Action(rulesJson.length());
+                action.rules = new ArrayList<>();
+                for (int i = 0; i < rulesJson.length(); i++) {
+                    action.rules.add((Boolean) rulesJson.get(i));
+                }
+                action.title = title;
+            }
+            return action;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public JSONObject toJSON() {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("hash", hashCode());
+            json.put("title", this.title);
+            JSONArray jsonArray = new JSONArray(this.rules);
+            json.put("rules", jsonArray);
+            return json;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
