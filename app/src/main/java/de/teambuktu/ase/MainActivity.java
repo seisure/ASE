@@ -308,9 +308,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 storageHelper.update(actionList, conditionList);
                 return true;
-            case R.id.buttonRuleCount:
-                setNumberOfRulesDialog();
-                return true;
             case R.id.buttonCreateInitialTable:
                 Intent initialIntent = new Intent(this, InitialActivity.class);
                 initialIntent.putExtra("conditions", conditionList.size());
@@ -387,37 +384,5 @@ public class MainActivity extends AppCompatActivity {
             condition.setNumberOfRules(count);
             addRowToUI(condition);
         }
-    }
-
-    private void setNumberOfRulesDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.ruleCount);
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        builder.setView(input);
-
-        final Context context = this.getApplicationContext();
-        builder.setPositiveButton("Anpassen", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String text = input.getText().toString();
-                int ruleCount = Integer.parseInt(text);
-                setNumberOfRules(ruleCount);
-
-                StorageHelper storageHelper = new StorageHelper(context);
-                storageHelper.update(actionList, conditionList);
-                Toast.makeText(MainActivity.this, "Anzahl der Regeln auf " + text + " geändert", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
     }
 }
