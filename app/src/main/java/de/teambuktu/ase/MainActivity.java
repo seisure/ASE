@@ -103,6 +103,19 @@ public class MainActivity extends AppCompatActivity {
             conditionRule.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             conditionRule.setClickable(true);
             conditionRule.setFocusable(true);
+            conditionRule.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String currentText = (String) ((TextView) v).getText();
+                    if (currentText.equals("-")) {
+                        ((TextView) v).setText("J");
+                    } else if (currentText.equals("J")) {
+                        ((TextView) v).setText("N");
+                    } else if (currentText.equals("N")) {
+                        ((TextView) v).setText("-");
+                    }
+                }
+            });
             row.addView(conditionRule);
         }
 
