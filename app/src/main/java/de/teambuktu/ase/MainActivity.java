@@ -166,20 +166,7 @@ public class MainActivity extends AppCompatActivity {
             conditionRule.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String currentText = (String) ((TextView) v).getText();
-                    int conditionIndex = conditionList.indexOf(conditionToAdd);
-                    if (currentText.equals("-")) {
-                        ((TextView) v).setText("J");
-                        conditionList.get(conditionIndex).rules.set(ruleIndex, "J");
-                    } else if (currentText.equals("J")) {
-                        ((TextView) v).setText("N");
-                        conditionList.get(conditionIndex).rules.set(ruleIndex, "N");
-                    } else if (currentText.equals("N")) {
-                        ((TextView) v).setText("-");
-                        conditionList.get(conditionIndex).rules.set(ruleIndex, "-");
-                    }
-                    StorageHelper storageHelper = new StorageHelper(getApplicationContext());
-                    storageHelper.update(actionList, conditionList);
+                    fnOnClickConditionRule(v, conditionToAdd, ruleIndex);
                 }
             });
             row.addView(conditionRule);
@@ -368,6 +355,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void fnOnClickConditionRule (View v, Condition conditionToAdd, int ruleIndex) {
+        String currentText = (String) ((TextView) v).getText();
+        int conditionIndex = conditionList.indexOf(conditionToAdd);
+        if (currentText.equals("-")) {
+            ((TextView) v).setText("J");
+            conditionList.get(conditionIndex).rules.set(ruleIndex, "J");
+        } else if (currentText.equals("J")) {
+            ((TextView) v).setText("N");
+            conditionList.get(conditionIndex).rules.set(ruleIndex, "N");
+        } else if (currentText.equals("N")) {
+            ((TextView) v).setText("-");
+            conditionList.get(conditionIndex).rules.set(ruleIndex, "-");
+        }
+        StorageHelper storageHelper = new StorageHelper(getApplicationContext());
+        storageHelper.update(actionList, conditionList);
+        return;
     }
 
     private void setNumberOfRules(int count) {
