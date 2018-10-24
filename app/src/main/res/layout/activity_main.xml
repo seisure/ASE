@@ -24,39 +24,48 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title">
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false">
 
-        <LinearLayout
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:scrollbars="horizontal"
+            android:fadeScrollbars="false">
 
-            <TableLayout
-                android:id="@+id/tableCondition"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            </TableLayout>
+                <TableLayout
+                    android:id="@+id/tableCondition"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/title">
 
-            <TableLayout
-                android:id="@+id/tableAction"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tableCondition"
-                tools:context=".MainActivity">
+                </TableLayout>
 
-            </TableLayout>
-        </LinearLayout>
+                <TableLayout
+                    android:id="@+id/tableAction"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tableCondition"
+                    tools:context=".MainActivity">
+
+                </TableLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
     </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
