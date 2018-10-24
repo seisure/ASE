@@ -3,7 +3,7 @@ package de.teambuktu.ase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class TableEntry {
+abstract class TableEntry {
     private String title;
 
     public String getTitle(){
