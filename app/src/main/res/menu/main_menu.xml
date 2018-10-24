@@ -19,7 +19,7 @@
         android:icon="@android:drawable/ic_menu_edit"
         android:title="@string/ruleCount" />
     <item
-        android:id="@+id/buttonCreatenitialTable"
+        android:id="@+id/buttonCreateInitialTable"
         android:icon="@android:drawable/ic_input_add"
         android:title="@string/createInitialTable" />
     <item

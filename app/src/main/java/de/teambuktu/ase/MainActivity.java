@@ -311,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.buttonRuleCount:
                 setNumberOfRulesDialog();
                 return true;
-            case R.id.buttonCreatenitialTable:
+            case R.id.buttonCreateInitialTable:
                 Intent initialIntent = new Intent(this, InitialActivity.class);
                 initialIntent.putExtra("conditions", conditionList.size());
                 initialIntent.putExtra("actions", actionList.size());

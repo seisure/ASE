@@ -1,15 +1,23 @@
 package de.teambuktu.ase;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.Toast;
 
 public class InitialActivity extends AppCompatActivity implements View.OnClickListener {
+    int conditionsIn;
+    int actionsIn;
+    int rulesIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +30,15 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         Intent intent = this.getIntent();
-        int conditions = intent.getIntExtra("conditions", 0);
-        int actions = intent.getIntExtra("actions", 0);
-        int rules = intent.getIntExtra("rules", 0);
+        conditionsIn = intent.getIntExtra("conditions", 0);
+        actionsIn = intent.getIntExtra("actions", 0);
+        rulesIn = intent.getIntExtra("rules", 0);
         EditText conditionsText = findViewById(R.id.editTextConditionsToAdd);
         EditText actionsText = findViewById(R.id.editTextActionsToAdd);
         EditText rulesText = findViewById(R.id.editTextRulesToAdd);
-        conditionsText.setText(String.valueOf(conditions));
-        actionsText.setText(String.valueOf(actions));
-        rulesText.setText(String.valueOf(rules));
+        conditionsText.setText(String.valueOf(conditionsIn));
+        actionsText.setText(String.valueOf(actionsIn));
+        rulesText.setText(String.valueOf(rulesIn));
 
         Button clickButton1 = findViewById(R.id.buttonCplus);
         clickButton1.setOnClickListener(this);
@@ -87,16 +95,61 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.buttonCreate: {
                 Intent intent = new Intent(this, InitialActivity.class);
                 EditText editText = findViewById(R.id.editTextConditionsToAdd);
-                int cons = Integer.parseInt(editText.getText().toString());
+                int conditionsOut = Integer.parseInt(editText.getText().toString());
                 editText = findViewById(R.id.editTextActionsToAdd);
-                int acts = Integer.parseInt(editText.getText().toString());
+                int actionsOut = Integer.parseInt(editText.getText().toString());
                 editText = findViewById(R.id.editTextRulesToAdd);
-                int rules = Integer.parseInt(editText.getText().toString());
-                intent.putExtra("conditions", cons);
-                intent.putExtra("actions", acts);
-                intent.putExtra("rules", rules);
-                setResult(RESULT_OK, intent);
-                finish();
+                int rulesOut = Integer.parseInt(editText.getText().toString());
+
+                if (conditionsOut < conditionsIn || actionsOut < actionsIn || rulesOut < rulesIn) {
+
+                    String ausgabe = getString(R.string.warningForDelete);
+
+                    if (conditionsOut < conditionsIn) {
+                        ausgabe = ausgabe.concat(getString(R.string.conditions) + "\n");
+                    }
+                    if (actionsOut < actionsIn) {
+                        ausgabe = ausgabe.concat(getString(R.string.actions) + "\n");
+                    }
+                    if (rulesOut < rulesIn) {
+                        ausgabe = ausgabe.concat(getString(R.string.rules) + "\n");
+                    }
+                    ausgabe = ausgabe.concat(getString(R.string.continueWarning));
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(getString(R.string.warning));
+                    builder.setMessage(ausgabe);
+
+                    final Intent tempIntent = intent;
+                    final int tempConditionsOut = conditionsOut;
+                    final int tempActionsOut = actionsOut;
+                    final int tempRulesOut = rulesOut;
+                    builder.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            tempIntent.putExtra("conditions", tempConditionsOut);
+                            tempIntent.putExtra("actions", tempActionsOut);
+                            tempIntent.putExtra("rules", tempRulesOut);
+                            setResult(RESULT_OK, tempIntent);
+                            finish();
+                        }
+                    });
+
+                    builder.setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                } else {
+                    intent.putExtra("conditions", conditionsOut);
+                    intent.putExtra("actions", actionsOut);
+                    intent.putExtra("rules", rulesOut);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
                 break;
             }
             case android.R.id.home : {
