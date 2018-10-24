@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Action> actionList = new ArrayList<>();
     ArrayList<Condition> conditionList = new ArrayList<>();
 
-    private void addRowToUI(Action actionToAdd) {
+    private void addRowToUI(final Action actionToAdd) {
         TableLayout table;
         table = findViewById(R.id.tableAction);
 
@@ -43,15 +46,51 @@ public class MainActivity extends AppCompatActivity {
         columnID.setIncludeFontPadding(true);
         columnID.setPadding(10, 0, 0, 0);
 
-        columnText.setHint("Aktion");
+        columnText.setText(actionToAdd.title);
+        columnText.setHint(R.string.action);
         columnText.setEms(6);
+        columnText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int index = actionList.indexOf(actionToAdd);
+                actionList.get(index).title = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                StorageHelper storageHelper = new StorageHelper(getApplicationContext());
+                storageHelper.update(actionList, conditionList);
+            }
+        });
 
         CheckBox actionRule;
         for (int i = 0; i < actionToAdd.rules.size(); i++) {
+            final int ruleIndex = i;
             actionRule = new CheckBox(this);
+            row.addView(actionRule);
             actionRule.setChecked(actionToAdd.rules.get(i));
             actionRule.setEms(2);
-            row.addView(actionRule);
+
+            actionRule.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final int index = actionList.indexOf(actionToAdd);
+                    if (((CheckBox) v).isChecked()) {
+                        actionList.get(index).rules.set(ruleIndex, true);
+                    }
+                    else {
+                        actionList.get(index).rules.set(ruleIndex, false);
+                    }
+                    StorageHelper storageHelper = new StorageHelper(getApplicationContext());
+                    storageHelper.update(actionList, conditionList);
+                }
+            });
+
         }
 
         final Context context = this.getApplicationContext();
@@ -92,11 +131,32 @@ public class MainActivity extends AppCompatActivity {
         columnID.setEms(2);
         columnID.setIncludeFontPadding(true);
         columnID.setPadding(10, 0, 0, 0);
-        columnText.setHint("Bedingung");
+
+        columnText.setText(conditionToAdd.title);
+        columnText.setHint(R.string.condition);
         columnText.setEms(6);
+        columnText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                final int conditionIndex = conditionList.indexOf(conditionToAdd);
+                conditionList.get(conditionIndex).title = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                StorageHelper storageHelper = new StorageHelper(getApplicationContext());
+                storageHelper.update(actionList, conditionList);
+            }
+        });
 
         TextView conditionRule;
         for (int i = 0; i < conditionToAdd.rules.size(); i++) {
+            final int ruleIndex = i;
             conditionRule = new TextView(this);
             conditionRule.setText(conditionToAdd.rules.get(i));
             conditionRule.setEms(2);
@@ -107,13 +167,19 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     String currentText = (String) ((TextView) v).getText();
+                    int conditionIndex = conditionList.indexOf(conditionToAdd);
                     if (currentText.equals("-")) {
                         ((TextView) v).setText("J");
+                        conditionList.get(conditionIndex).rules.set(ruleIndex, "J");
                     } else if (currentText.equals("J")) {
                         ((TextView) v).setText("N");
+                        conditionList.get(conditionIndex).rules.set(ruleIndex, "N");
                     } else if (currentText.equals("N")) {
                         ((TextView) v).setText("-");
+                        conditionList.get(conditionIndex).rules.set(ruleIndex, "-");
                     }
+                    StorageHelper storageHelper = new StorageHelper(getApplicationContext());
+                    storageHelper.update(actionList, conditionList);
                 }
             });
             row.addView(conditionRule);
@@ -269,28 +335,31 @@ public class MainActivity extends AppCompatActivity {
 
             setNumberOfRules(rules);
 
-            if (conditions > conditionList.size()) {
-                for (int i = 0; i <= conditions - conditionList.size(); i++) {
+            int conditionListCount = conditionList.size();
+            int actionListCount = actionList.size();
+
+            if (conditions > conditionListCount) {
+                for (int i = 0; i < conditions - conditionListCount; i++) {
                     Condition condition = new Condition(rules);
                     conditionList.add(condition);
                     addRowToUI(condition);
                 }
-            } else if (conditions < conditionList.size()) {
-                for (int i = conditionList.size() - 1; i > conditions - 1; i--) {
+            } else if (conditions < conditionListCount) {
+                for (int i = conditionListCount - 1; i > conditions - 1; i--) {
                     conditionList.remove(i);
                     TableLayout tableLayout = findViewById(R.id.tableCondition);
                     tableLayout.removeViewAt(i);
                 }
             }
 
-            if (actions > actionList.size()) {
-                for (int i = 0; i <= actions - actionList.size(); i++) {
+            if (actions > actionListCount) {
+                for (int i = 0; i < actions - actionListCount; i++) {
                     Action action = new Action(rules);
                     actionList.add(action);
                     addRowToUI(action);
                 }
-            } else if (actions < actionList.size()) {
-                for (int i = actionList.size() - 1; i > actions - 1; i--) {
+            } else if (actions < actionListCount) {
+                for (int i = actionListCount - 1; i > actions - 1; i--) {
                     actionList.remove(i);
                     TableLayout tableLayout = findViewById(R.id.tableAction);
                     tableLayout.removeViewAt(i);

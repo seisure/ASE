@@ -5,9 +5,14 @@
     <string name="table">Auftragsannahme</string>
     <string name="create">Anpassen</string>
     <string name="createInitialTable">Tabelle bearbeiten</string>
+
+    <string name="condition">Bedingung</string>
+    <string name="action">Aktion</string>
+    <string name="rule">Regel</string>
     <string name="conditions">Bedingungen</string>
     <string name="actions">Aktionen</string>
     <string name="rules">Regeln</string>
+
     <string name="addActionRow">+A</string>
     <string name="addConditionRow">+B</string>
     <string name="addRuleColumn">+R</string>
