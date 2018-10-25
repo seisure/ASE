@@ -79,18 +79,9 @@ public class MainActivity extends AppCompatActivity {
             actionRule.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final int index = actionList.indexOf(actionToAdd);
-                    if (((CheckBox) v).isChecked()) {
-                        actionList.get(index).rules.set(ruleIndex, true);
-                    }
-                    else {
-                        actionList.get(index).rules.set(ruleIndex, false);
-                    }
-                    StorageHelper storageHelper = new StorageHelper(getApplicationContext());
-                    storageHelper.update(actionList, conditionList);
+                    fnOnClickActionRule(v, actionToAdd, ruleIndex);
                 }
             });
-
         }
 
         final Context context = this.getApplicationContext();
@@ -106,11 +97,7 @@ public class MainActivity extends AppCompatActivity {
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImageButton button = (ImageButton) v;
-                actionList.remove(button.getTag());
-                StorageHelper storageHelper = new StorageHelper(context);
-                storageHelper.update(actionList, conditionList);
-                removeFromTableLayout(row, R.id.tableAction);
+                fnOnClickButtonDeleteRow(actionList, v, context, row);
             }
         });
     }
@@ -185,11 +172,7 @@ public class MainActivity extends AppCompatActivity {
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImageButton button = (ImageButton) v;
-                conditionList.remove(button.getTag());
-                StorageHelper storageHelper = new StorageHelper(context);
-                storageHelper.update(actionList, conditionList);
-                removeFromTableLayout(row, R.id.tableCondition);
+                fnOnClickButtonDeleteRow(conditionList, v, context, row);
             }
         });
     }
@@ -207,15 +190,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                TableLayout conditionTable = findViewById(R.id.tableCondition);
-                conditionTable.removeAllViews();
-                TableLayout actionTable = findViewById(R.id.tableAction);
-                actionTable.removeAllViews();
-                conditionList.clear();
-                actionList.clear();
-                StorageHelper storageHelper = new StorageHelper(context);
-                storageHelper.update(actionList, conditionList);
-                Toast.makeText(MainActivity.this, R.string.clearTableSuccess, Toast.LENGTH_SHORT).show();
+                fnOnClickPositiveButtonClearTable(context);
             }
         });
 
@@ -357,6 +332,19 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void fnOnClickActionRule (View v, Action actionToAdd, int ruleIndex) {
+        final int index = actionList.indexOf(actionToAdd);
+        if (((CheckBox) v).isChecked()) {
+            actionList.get(index).rules.set(ruleIndex, true);
+        }
+        else {
+            actionList.get(index).rules.set(ruleIndex, false);
+        }
+        StorageHelper storageHelper = new StorageHelper(getApplicationContext());
+        storageHelper.update(actionList, conditionList);
+        return;
+    }
+    
     private void fnOnClickConditionRule (View v, Condition conditionToAdd, int ruleIndex) {
         String currentText = (String) ((TextView) v).getText();
         int conditionIndex = conditionList.indexOf(conditionToAdd);
@@ -371,6 +359,36 @@ public class MainActivity extends AppCompatActivity {
             conditionList.get(conditionIndex).rules.set(ruleIndex, "-");
         }
         StorageHelper storageHelper = new StorageHelper(getApplicationContext());
+        storageHelper.update(actionList, conditionList);
+        return;
+    }
+
+    private void fnOnClickButtonDeleteRow (Object list, View v, Context context, TableRow row) {
+        ImageButton button = (ImageButton) v;
+        if (((ArrayList<?>)list).get(0) instanceof Action) {
+            actionList.remove(button.getTag());
+            removeFromTableLayout(row, R.id.tableAction);
+        } else if (((ArrayList<?>)list).get(0) instanceof Condition) {
+            conditionList.remove(button.getTag());
+            removeFromTableLayout(row, R.id.tableCondition);
+        }
+        updateStorage(context);
+        return;
+    }
+
+    private void fnOnClickPositiveButtonClearTable (Context context) {
+        TableLayout conditionTable = findViewById(R.id.tableCondition);
+        conditionTable.removeAllViews();
+        TableLayout actionTable = findViewById(R.id.tableAction);
+        actionTable.removeAllViews();
+        conditionList.clear();
+        actionList.clear();
+        updateStorage(context);
+        Toast.makeText(MainActivity.this, R.string.clearTableSuccess, Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateStorage (Context context) {
+        StorageHelper storageHelper = new StorageHelper(context);
         storageHelper.update(actionList, conditionList);
         return;
     }
