@@ -8,14 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
@@ -30,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Condition> conditionList = new ArrayList<>();
 
     private void addRowToUI(final Action actionToAdd) {
+        setTableVisible(R.id.tableHeader, true);
+
         TableLayout table;
         table = findViewById(R.id.tableAction);
 
@@ -103,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addRowToUI(final Condition conditionToAdd) {
+        setTableVisible(R.id.tableHeader, true);
+
         TableLayout table;
         table = findViewById(R.id.tableCondition);
 
@@ -177,6 +179,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void addRuleColHeader(int iRuleCount) {
+        TextView columnText = new TextView(this);
+        TableLayout table = (TableLayout)findViewById(R.id.tableHeader);
+        TableRow row = (TableRow) table.getChildAt(0);
+        row.addView(columnText);
+        columnText.setEms(2);
+        columnText.setText("R" + iRuleCount);
+    }
+
     private void removeFromTableLayout(View viewToRemove, int tableId) {
         TableLayout table = findViewById(tableId);
         table.removeView(viewToRemove);
@@ -204,6 +215,15 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void clearHeaderTable () {
+        setTableVisible(R.id.tableHeader, false);
+        TextView columnText = new TextView(this);
+        TableLayout table = (TableLayout)findViewById(R.id.tableHeader);
+        TableRow row = (TableRow) table.getChildAt(0);
+        row.removeViews(2, row.getChildCount() - 2);
+        return;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -221,6 +241,8 @@ public class MainActivity extends AppCompatActivity {
         for (Condition condition : conditions) {
             addRowToUI(condition);
         }
+
+        createHeaderColsRules();
 
         if (this.actionList.size() == 0 && this.conditionList.size() == 0) {
             Intent initialIntent = new Intent(this, InitialActivity.class);
@@ -265,8 +287,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.buttonAddRuleColumn:
                 if (!conditionList.isEmpty()) {
                     setNumberOfRules(conditionList.get(0).rules.size() + 1);
+                    addRuleColHeader(getRuleCount());
                 } else if (!actionList.isEmpty()) {
                     setNumberOfRules(actionList.get(0).rules.size() + 1);
+                    addRuleColHeader(getRuleCount());
                 }
                 storageHelper.update(actionList, conditionList);
                 return true;
@@ -325,6 +349,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            clearHeaderTable();
+            createHeaderColsRules();
+
             StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
             storageHelper.update(actionList, conditionList);
         }
@@ -365,12 +392,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void fnOnClickButtonDeleteRow (Object list, View v, Context context, TableRow row) {
         ImageButton button = (ImageButton) v;
+        boolean bIsActionListEmpty = true, bIsConditionListEmpty = true;
         if (((ArrayList<?>)list).get(0) instanceof Action) {
             actionList.remove(button.getTag());
             removeFromTableLayout(row, R.id.tableAction);
+            bIsActionListEmpty = actionList.size() == 0;
+            bIsConditionListEmpty = conditionList.size() == 0;
         } else if (((ArrayList<?>)list).get(0) instanceof Condition) {
             conditionList.remove(button.getTag());
             removeFromTableLayout(row, R.id.tableCondition);
+            bIsConditionListEmpty = conditionList.size() == 0;
+            bIsActionListEmpty = actionList.size() == 0;
+        }
+        boolean bIsTableEmpty = bIsActionListEmpty && bIsConditionListEmpty;
+        if (bIsTableEmpty) {
+            setTableVisible(R.id.tableHeader, false);
+            clearHeaderTable();
         }
         updateStorage(context);
         return;
@@ -381,6 +418,7 @@ public class MainActivity extends AppCompatActivity {
         conditionTable.removeAllViews();
         TableLayout actionTable = findViewById(R.id.tableAction);
         actionTable.removeAllViews();
+        clearHeaderTable();
         conditionList.clear();
         actionList.clear();
         updateStorage(context);
@@ -391,6 +429,22 @@ public class MainActivity extends AppCompatActivity {
         StorageHelper storageHelper = new StorageHelper(context);
         storageHelper.update(actionList, conditionList);
         return;
+    }
+
+    private void createHeaderColsRules () {
+        boolean bIsActionListFilled = this.actionList.size() != 0;
+        boolean bIsConditionListFilled = this.conditionList.size() != 0;
+        if (bIsConditionListFilled) {
+            setTableVisible(R.id.tableHeader, true);
+            for(int i = 1; i <= getRuleCount(); i++) {
+                addRuleColHeader(i);
+            }
+        } else if (bIsActionListFilled) {
+            setTableVisible(R.id.tableHeader, true);
+            for(int i = 1; i <= getRuleCount(); i++) {
+                addRuleColHeader(i);
+            }
+        }
     }
 
     private void setNumberOfRules(int count) {
@@ -407,5 +461,15 @@ public class MainActivity extends AppCompatActivity {
             condition.setNumberOfRules(count);
             addRowToUI(condition);
         }
+    }
+
+    private void setTableVisible (int iTableId, boolean bVisible) {
+        TableLayout table = (TableLayout)findViewById(iTableId);
+        if (bVisible) {
+            table.setVisibility(View.VISIBLE);
+        } else if (!bVisible) {
+            table.setVisibility(View.INVISIBLE);
+        }
+        return;
     }
 }
