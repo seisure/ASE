@@ -6,8 +6,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-class Action {
-    protected String title;
+class Action extends TableEntry {
     protected ArrayList<Boolean> rules = new ArrayList<>();
 
     public Action(int ruleCount) {
@@ -43,7 +42,7 @@ class Action {
                 for (int i = 0; i < rulesJson.length(); i++) {
                     action.rules.add((Boolean) rulesJson.get(i));
                 }
-                action.title = title;
+                action.setTitle(title);
             }
             return action;
         } catch (JSONException e) {
@@ -54,15 +53,13 @@ class Action {
 
     public JSONObject toJSON() {
         try {
-            JSONObject json = new JSONObject();
-            json.put("hash", hashCode());
-            json.put("title", this.title);
-            JSONArray jsonArray = new JSONArray(this.rules);
-            json.put("rules", jsonArray);
+            JSONObject json = super.toJSON();
+            json.put("rules", new JSONArray(this.rules));
             return json;
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 }
