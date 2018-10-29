@@ -23,4 +23,7 @@
     <string name="clearTable">Alles löschen</string>
     <string name="clearTableAskFor">Sollen alle Tabelleninhalte gelöscht werden?</string>
     <string name="clearTableSuccess">Tabelle wurde gelöscht</string>
+    <string name="importCsv">Aus CSV importieren</string>
+    <string name="importCsvAskFor">Durch das Importieren wird die bestehende Tabelle überschrieben. Fortfahren?</string>
+    <string name="exportCSV">Als CSV exportieren</string>
 </resources>

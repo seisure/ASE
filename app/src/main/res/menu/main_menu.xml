@@ -19,6 +19,12 @@
         android:icon="@android:drawable/ic_input_add"
         android:title="@string/createInitialTable" />
     <item
+        android:id="@+id/buttonImportCSV"
+        android:title="@string/importCsv" />
+    <item
+        android:id="@+id/buttonExportCSV"
+        android:title="@string/exportCSV" />
+    <item
         android:id="@+id/buttonClearTable"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
         android:title="@string/clearTable" />
