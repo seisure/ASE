@@ -97,10 +97,10 @@ class StorageHelper {
         String file = "ASE.csv";
         StringBuilder builder = new StringBuilder();
 
-        for (Condition condition :
-                conditionList) {
+        for (Condition condition : conditionList) {
             builder.append('C').append(';');
-            builder.append(condition.getTitle()).append(';');
+            String title = condition.getTitle();
+            builder.append(title == null ? "" : title).append(';');
             for (String rule :
                     condition.rules) {
                 builder.append(rule).append(';');
@@ -109,10 +109,10 @@ class StorageHelper {
             builder.append('\n');
         }
 
-        for (Action action :
-                actionList) {
+        for (Action action : actionList) {
             builder.append('A').append(';');
-            builder.append(action.getTitle()).append(';');
+            String title = action.getTitle();
+            builder.append(title == null ? "" : title).append(';');
             for (Boolean rule :
                     action.rules) {
                 builder.append(rule ? 1 : 0).append(';');
