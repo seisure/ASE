@@ -2,7 +2,14 @@ package de.teambuktu.ase;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -84,5 +91,83 @@ class StorageHelper {
 //            }
         }
         return conditionList;
+    }
+
+    void exportToCSV(ArrayList<Condition> conditionList, ArrayList<Action> actionList, Context context) {
+        String file = "ASE.csv";
+        StringBuilder builder = new StringBuilder();
+
+        for (Condition condition :
+                conditionList) {
+            builder.append('C').append(';');
+            builder.append(condition.getTitle()).append(';');
+            for (String rule :
+                    condition.rules) {
+                builder.append(rule).append(';');
+            }
+            builder.deleteCharAt(builder.length()-1);
+            builder.append('\n');
+        }
+
+        for (Action action :
+                actionList) {
+            builder.append('A').append(';');
+            builder.append(action.getTitle()).append(';');
+            for (Boolean rule :
+                    action.rules) {
+                builder.append(rule ? 1 : 0).append(';');
+            }
+            builder.deleteCharAt(builder.length()-1);
+            builder.append('\n');
+        }
+
+        writeToFile(file, builder.toString(), context);
+    }
+
+    String loadFromCSV(Context context) {
+        String file = "ASE.csv";
+        return readFromFile(file, context);
+    }
+
+    private void writeToFile(String file, String data,Context context) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(file, Context.MODE_PRIVATE));
+
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    private String readFromFile(String file, Context context) {
+        String ret = "";
+
+        try {
+            InputStream inputStream = context.openFileInput(file);
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString).append('\n');
+                }
+                stringBuilder.deleteCharAt(stringBuilder.length()-1);
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
     }
 }

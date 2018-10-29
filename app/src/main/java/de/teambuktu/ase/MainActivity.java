@@ -8,14 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
@@ -182,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         table.removeView(viewToRemove);
     }
 
-    private void clearTable() {
+    private void clearTableDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.clearTableAskFor);
         final Context context = this.getApplicationContext();
@@ -278,7 +276,35 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(initialIntent, 1);
                 return true;
             case R.id.buttonClearTable:
-                clearTable();
+                clearTableDialog();
+                return true;
+            case R.id.buttonExportCSV:
+                storageHelper.exportToCSV(conditionList, actionList, getApplicationContext());
+                return true;
+            case R.id.buttonImportCSV:
+                if (conditionList.isEmpty() && actionList.isEmpty()) {
+                    importTableEntriesFromCSV();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(R.string.importCsv);
+                    builder.setMessage(R.string.importCsvAskFor);
+
+                    builder.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            importTableEntriesFromCSV();
+                        }
+                    });
+
+                    builder.setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -332,6 +358,42 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void importTableEntriesFromCSV() {
+        Context context = getApplicationContext();
+        StorageHelper storageHelper = new StorageHelper(context);
+        String csvString = storageHelper.loadFromCSV(context);
+        String[] csv = csvString.split("\n");
+        int rules = csv[0].split(";").length - 2;
+
+        conditionList = new ArrayList<Condition>();
+        actionList = new ArrayList<Action>();
+        clearUITable();
+
+        for (String line : csv) {
+            String[] lineParts = line.split(";");
+            if (lineParts[0].equals("C")) {
+                Condition newCondition = new Condition(rules);
+                newCondition.setTitle(lineParts[1]);
+                int j = 0;
+                for (int i = 2; i < lineParts.length; i++) {
+                    newCondition.rules.set(j++, lineParts[i]);
+                }
+                conditionList.add(newCondition);
+                addRowToUI(newCondition);
+            }
+            else if (lineParts[0].equals("A")) {
+                Action newAction = new Action(rules);
+                newAction.setTitle(lineParts[1]);
+                int j = 0;
+                for (int i = 2; i < lineParts.length; i++) {
+                    newAction.rules.set(j++, lineParts[i].equals("1"));
+                }
+                actionList.add(newAction);
+                addRowToUI(newAction);
+            }
+        }
+    }
+
     private void fnOnClickActionRule (View v, Action actionToAdd, int ruleIndex) {
         final int index = actionList.indexOf(actionToAdd);
         if (((CheckBox) v).isChecked()) {
@@ -376,11 +438,15 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    private void fnOnClickPositiveButtonClearTable (Context context) {
+    private void clearUITable() {
         TableLayout conditionTable = findViewById(R.id.tableCondition);
         conditionTable.removeAllViews();
         TableLayout actionTable = findViewById(R.id.tableAction);
         actionTable.removeAllViews();
+    }
+
+    private void fnOnClickPositiveButtonClearTable (Context context) {
+        clearUITable();
         conditionList.clear();
         actionList.clear();
         updateStorage(context);
@@ -394,15 +460,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNumberOfRules(int count) {
-        TableLayout actionTable = findViewById(R.id.tableAction);
-        actionTable.removeAllViews();
+        clearUITable();
+
         for (Action action : actionList) {
             action.setNumberOfRules(count);
             addRowToUI(action);
         }
 
-        TableLayout conditionTable = findViewById(R.id.tableCondition);
-        conditionTable.removeAllViews();
         for (Condition condition : conditionList) {
             condition.setNumberOfRules(count);
             addRowToUI(condition);
