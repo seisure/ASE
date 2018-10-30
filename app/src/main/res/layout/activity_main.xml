@@ -18,54 +18,71 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
-        android:scrollbars="vertical"
+        android:scrollbars="horizontal"
         android:fadeScrollbars="false">
 
-        <HorizontalScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="horizontal"
-            android:fadeScrollbars="false">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <TableLayout
+                android:id="@+id/tableHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:visibility="invisible">
+                <TableRow>
+                    <TextView android:text="" android:ems="2" android:paddingLeft="10dp"/>
+                    <TextView android:text="Bedingung/Aktion" android:ems="8" android:layout_marginLeft="11dp" />
+                </TableRow>
+            </TableLayout>
 
-                <TableLayout
-                    android:id="@+id/tableCondition"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/title">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:fadeScrollbars="false">
 
-                </TableLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                <TableLayout
-                    android:id="@+id/tableAction"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tableCondition"
-                    tools:context=".MainActivity">
+                        <TableLayout
+                            android:id="@+id/tableCondition"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/title">
 
-                </TableLayout>
-            </LinearLayout>
-        </HorizontalScrollView>
-    </ScrollView>
+                        </TableLayout>
+
+                        <TableLayout
+                            android:id="@+id/tableAction"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tableCondition"
+                            tools:context=".MainActivity">
+
+                        </TableLayout>
+                    </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </HorizontalScrollView>
 
 </android.support.constraint.ConstraintLayout>
