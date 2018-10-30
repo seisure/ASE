@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         columnID.setIncludeFontPadding(true);
         columnID.setPadding(10, 0, 0, 0);
 
-        columnText.setText(actionToAdd.title);
+        columnText.setText(actionToAdd.getTitle());
         columnText.setHint(R.string.action);
         columnText.setEms(6);
         columnText.addTextChangedListener(new TextWatcher() {
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int index = actionList.indexOf(actionToAdd);
-                actionList.get(index).title = s.toString();
+                actionList.get(index).setTitle(s.toString());
             }
 
             @Override
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         columnID.setIncludeFontPadding(true);
         columnID.setPadding(10, 0, 0, 0);
 
-        columnText.setText(conditionToAdd.title);
+        columnText.setText(conditionToAdd.getTitle());
         columnText.setHint(R.string.condition);
         columnText.setEms(6);
         columnText.addTextChangedListener(new TextWatcher() {
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 final int conditionIndex = conditionList.indexOf(conditionToAdd);
-                conditionList.get(conditionIndex).title = s.toString();
+                conditionList.get(conditionIndex).setTitle(s.toString());
             }
 
             @Override

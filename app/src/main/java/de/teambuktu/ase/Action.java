@@ -5,8 +5,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-class Action {
-    protected String title;
+class Action extends TableEntry {
     protected ArrayList<Rule> rules = new ArrayList<>();
 
     public Action(int ruleCount) {
@@ -48,7 +47,7 @@ class Action {
                     ruleImportDestination.setRuleHash(currentRuleHash);
                     ruleImportDestination.setRuleActionValue(currentActionValue);
                 }
-                action.title = title;
+                action.setTitle(title);
             }
             return action;
         } catch (JSONException e) {
@@ -59,9 +58,7 @@ class Action {
 
     public JSONObject toJSON() {
         try {
-            JSONObject json = new JSONObject();
-            json.put("hash", hashCode());
-            json.put("title", this.title);
+            JSONObject json = super.toJSON();
             JSONObject jsonObjectParent = new JSONObject();
             for (int i = 0; i < this.rules.size(); i++) {
                 JSONObject jsonObjectChild = new JSONObject();
@@ -74,6 +71,7 @@ class Action {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 }

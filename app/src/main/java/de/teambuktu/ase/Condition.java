@@ -13,8 +13,7 @@ import java.util.Set;
 
 import static android.content.Context.MODE_PRIVATE;
 
-class Condition {
-    protected String title;
+class Condition extends TableEntry {
     protected ArrayList<Rule> rules = new ArrayList<>();
 
     public Condition(int ruleCount) {
@@ -56,7 +55,7 @@ class Condition {
                     ruleImportDestination.setRuleHash(currentRuleHash);
                     ruleImportDestination.setRuleConditionValue(currentConditionValue);
                 }
-                condition.title = title;
+                condition.setTitle(title);
             }
             return condition;
         } catch (JSONException e) {
@@ -67,9 +66,7 @@ class Condition {
 
     public JSONObject toJSON() {
         try {
-            JSONObject json = new JSONObject();
-            json.put("hash", hashCode());
-            json.put("title", this.title);
+            JSONObject json = super.toJSON();
             JSONObject jsonObjectParent = new JSONObject();
             for (int i = 0; i < this.rules.size(); i++) {
                 JSONObject jsonObjectChild = new JSONObject();
@@ -82,21 +79,7 @@ class Condition {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
-    }
 
-    public Boolean store(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("DE.TEAMBUKTU.ASE", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Set<String> stored = sharedPreferences.getStringSet("conditions", null);
-        String serialized = this.toJSON().toString();
-        if (stored != null) {
-            stored.add(serialized);
-        } else {
-            stored = new HashSet<>();
-            stored.add(serialized);
-        }
-        editor.remove("conditions").commit();
-        return editor.putStringSet("conditions", stored).commit();
+        return null;
     }
 }
