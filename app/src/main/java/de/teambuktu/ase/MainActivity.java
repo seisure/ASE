@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     ArrayList<Action> actionList = new ArrayList<>();
     ArrayList<Condition> conditionList = new ArrayList<>();
+    ArrayList<Integer> ruleHashesHelper = new ArrayList<>();
 
     private void addRowToUI(final Action actionToAdd) {
         setTableVisible(R.id.tableHeader, true);
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             final int ruleIndex = i;
             actionRule = new CheckBox(this);
             row.addView(actionRule);
-            actionRule.setChecked(actionToAdd.rules.get(i));
+            actionRule.setChecked(actionToAdd.rules.get(i).getRuleActionValue());
             actionRule.setEms(2);
 
             actionRule.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < conditionToAdd.rules.size(); i++) {
             final int ruleIndex = i;
             conditionRule = new TextView(this);
-            conditionRule.setText(conditionToAdd.rules.get(i));
+            conditionRule.setText(conditionToAdd.rules.get(i).getRuleConditionValue());
             conditionRule.setEms(2);
             conditionRule.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             conditionRule.setClickable(true);
@@ -183,9 +185,29 @@ public class MainActivity extends AppCompatActivity {
         TextView columnText = new TextView(this);
         TableLayout table = (TableLayout)findViewById(R.id.tableHeader);
         TableRow row = (TableRow) table.getChildAt(0);
-        row.addView(columnText);
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
         columnText.setEms(2);
         columnText.setText("R" + iRuleCount);
+        final Context context = this.getApplicationContext();
+        final ImageButton buttonDelete = new ImageButton(this);
+        buttonDelete.setImageResource(R.drawable.close);
+        buttonDelete.setImageAlpha(150);
+        buttonDelete.setPadding(-35,0,0,20); //TODO check for center horizontal
+        buttonDelete.setForegroundGravity(Gravity.CENTER);
+        row.setVerticalGravity(Gravity.BOTTOM);
+        buttonDelete.setBackground(null);
+        buttonDelete.setTag(getHashForRuleColumn(iRuleCount));
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fnOnClickButtonDeleteCol(v, context);
+            }
+        });
+        linearLayout.addView(buttonDelete);
+        linearLayout.addView(columnText);
+        row.addView(linearLayout);
     }
 
     private void removeFromTableLayout(View viewToRemove, int tableId) {
@@ -275,22 +297,26 @@ public class MainActivity extends AppCompatActivity {
             case R.id.buttonAddActionRow:
                 Action action = new Action(getRuleCount());
                 actionList.add(action);
+                setRulesRowHash(action);
                 storageHelper.update(actionList, conditionList);
                 addRowToUI(action);
                 return true;
             case R.id.buttonAddConditionRow:
                 Condition condition = new Condition(getRuleCount());
                 conditionList.add(condition);
+                setRulesRowHash(condition);
                 storageHelper.update(actionList, conditionList);
                 addRowToUI(condition);
                 return true;
             case R.id.buttonAddRuleColumn:
                 if (!conditionList.isEmpty()) {
                     setNumberOfRules(conditionList.get(0).rules.size() + 1);
-                    addRuleColHeader(getRuleCount());
+                    setRuleColumnHash(getRuleCount() - 1);
+                    addRuleColHeader(getRuleCount() - 1);
                 } else if (!actionList.isEmpty()) {
                     setNumberOfRules(actionList.get(0).rules.size() + 1);
-                    addRuleColHeader(getRuleCount());
+                    setRuleColumnHash(getRuleCount() - 1);
+                    addRuleColHeader(getRuleCount() - 1);
                 }
                 storageHelper.update(actionList, conditionList);
                 return true;
@@ -362,10 +388,10 @@ public class MainActivity extends AppCompatActivity {
     private void fnOnClickActionRule (View v, Action actionToAdd, int ruleIndex) {
         final int index = actionList.indexOf(actionToAdd);
         if (((CheckBox) v).isChecked()) {
-            actionList.get(index).rules.set(ruleIndex, true);
+            actionList.get(index).rules.get(ruleIndex).setRuleActionValue(true);
         }
         else {
-            actionList.get(index).rules.set(ruleIndex, false);
+            actionList.get(index).rules.get(ruleIndex).setRuleActionValue(false);
         }
         StorageHelper storageHelper = new StorageHelper(getApplicationContext());
         storageHelper.update(actionList, conditionList);
@@ -377,13 +403,13 @@ public class MainActivity extends AppCompatActivity {
         int conditionIndex = conditionList.indexOf(conditionToAdd);
         if (currentText.equals("-")) {
             ((TextView) v).setText("J");
-            conditionList.get(conditionIndex).rules.set(ruleIndex, "J");
+            conditionList.get(conditionIndex).rules.get(ruleIndex).setRuleConditionValue("J");
         } else if (currentText.equals("J")) {
             ((TextView) v).setText("N");
-            conditionList.get(conditionIndex).rules.set(ruleIndex, "N");
+            conditionList.get(conditionIndex).rules.get(ruleIndex).setRuleConditionValue("N");
         } else if (currentText.equals("N")) {
             ((TextView) v).setText("-");
-            conditionList.get(conditionIndex).rules.set(ruleIndex, "-");
+            conditionList.get(conditionIndex).rules.get(ruleIndex).setRuleConditionValue("-");
         }
         StorageHelper storageHelper = new StorageHelper(getApplicationContext());
         storageHelper.update(actionList, conditionList);
@@ -413,6 +439,44 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
+    private void fnOnClickButtonDeleteCol(View v, Context context) {
+        ImageButton button = (ImageButton) v;
+        int ruleToDelete = (int) button.getTag();
+        int iRowCount;
+        int iColToDelete = ruleHashesHelper.indexOf(ruleToDelete);
+
+        for (Action action:actionList) {
+            action.rules.remove(iColToDelete);
+        }
+        for (Condition condition:conditionList) {
+            condition.rules.remove(iColToDelete);
+        }
+        ruleHashesHelper.remove(iColToDelete);
+
+        TableLayout headerTable = (TableLayout)findViewById(R.id.tableHeader);
+        iRowCount = headerTable.getChildCount();
+        for (int i = 0; i < iRowCount; i++) {
+            TableRow row = (TableRow)headerTable.getChildAt(i);
+            View col = row.getChildAt(iColToDelete + 2);
+            row.removeView(col);
+        }
+        TableLayout conditionsTable = (TableLayout)findViewById(R.id.tableCondition);
+        iRowCount = conditionsTable.getChildCount();
+        for (int i = 0; i < iRowCount; i++) {
+            TableRow row = (TableRow)conditionsTable.getChildAt(i);
+            View col = row.getChildAt(iColToDelete + 2);
+            row.removeView(col);
+        }
+        TableLayout actionsTable = (TableLayout)findViewById(R.id.tableAction);
+        iRowCount = actionsTable.getChildCount();
+        for (int i = 0; i < iRowCount; i++) {
+            TableRow row = (TableRow)actionsTable.getChildAt(i);
+            View col = row.getChildAt(iColToDelete + 2);
+            row.removeView(col);
+        }
+        updateStorage(context);
+    }
+
     private void fnOnClickPositiveButtonClearTable (Context context) {
         TableLayout conditionTable = findViewById(R.id.tableCondition);
         conditionTable.removeAllViews();
@@ -436,15 +500,23 @@ public class MainActivity extends AppCompatActivity {
         boolean bIsConditionListFilled = this.conditionList.size() != 0;
         if (bIsConditionListFilled) {
             setTableVisible(R.id.tableHeader, true);
-            for(int i = 1; i <= getRuleCount(); i++) {
+            for(int i = 0; i < getRuleCount(); i++) {
                 addRuleColHeader(i);
             }
         } else if (bIsActionListFilled) {
             setTableVisible(R.id.tableHeader, true);
-            for(int i = 1; i <= getRuleCount(); i++) {
+            for(int i = 0; i < getRuleCount(); i++) {
                 addRuleColHeader(i);
             }
         }
+    }
+
+    private int getHashForRuleColumn (int column) { // column starts with 0 (analog to index of array)
+        if (column >= ruleHashesHelper.size()) {
+            int ruleHash = (new Object()).hashCode();
+            ruleHashesHelper.add(ruleHash);
+        }
+        return ruleHashesHelper.get(column);
     }
 
     private void setNumberOfRules(int count) {
@@ -469,6 +541,32 @@ public class MainActivity extends AppCompatActivity {
             table.setVisibility(View.VISIBLE);
         } else if (!bVisible) {
             table.setVisibility(View.INVISIBLE);
+        }
+        return;
+    }
+
+    private void setRuleColumnHash (int column) { // column starts with 0 (analog to index of array)
+        for (Condition condition:conditionList) {
+            condition.rules.get(column).setRuleHash(getHashForRuleColumn(column));
+        }
+        for (Action action:actionList) {
+            action.rules.get(column).setRuleHash(getHashForRuleColumn(column));
+        }
+        return;
+    }
+
+    private void setRulesRowHash (Object object) {
+        int ruleCount = getRuleCount();
+        if (object instanceof Condition) {
+            for (int i = 0; i < ruleCount; i++) {
+                Rule currentRule = ((Condition) object).rules.get(i);
+                currentRule.setRuleHash(getHashForRuleColumn(i));
+            }
+        } else if (object instanceof Action) {
+            for (int i = 0; i < ruleCount; i++) {
+                Rule currentRule = ((Action) object).rules.get(i);
+                currentRule.setRuleHash(getHashForRuleColumn(i));
+            }
         }
         return;
     }
