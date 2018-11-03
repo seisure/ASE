@@ -23,6 +23,8 @@
         android:title="@string/importCsv" />
     <item
         android:id="@+id/buttonExportCSV"
+        android:icon="?attr/actionModeShareDrawable"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
         android:title="@string/exportCSV" />
     <item
         android:id="@+id/buttonClearTable"

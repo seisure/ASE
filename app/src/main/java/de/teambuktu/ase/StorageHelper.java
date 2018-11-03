@@ -2,10 +2,15 @@ package de.teambuktu.ase;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -93,8 +98,7 @@ class StorageHelper {
         return conditionList;
     }
 
-    void exportToCSV(ArrayList<Condition> conditionList, ArrayList<Action> actionList, Context context) {
-        String file = "ASE.csv";
+    File exportToCSV(ArrayList<Condition> conditionList, ArrayList<Action> actionList) {
         StringBuilder builder = new StringBuilder();
 
         for (Condition condition : conditionList) {
@@ -121,7 +125,22 @@ class StorageHelper {
             builder.append('\n');
         }
 
-        writeToFile(file, builder.toString(), context);
+        try {
+            File file;
+            FileOutputStream outputStream;
+            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "ASE.csv");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            outputStream = new FileOutputStream(file);
+            outputStream.write(builder.toString().getBytes());
+            outputStream.close();
+            return file;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new File("");
+        }
     }
 
     String loadFromCSV(Context context) {
