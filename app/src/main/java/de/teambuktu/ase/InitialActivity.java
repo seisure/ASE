@@ -1,6 +1,5 @@
 package de.teambuktu.ase;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -11,8 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TableLayout;
-import android.widget.Toast;
+
+import static de.teambuktu.ase.MainActivity.RESULT_IMPORT;
 
 public class InitialActivity extends AppCompatActivity implements View.OnClickListener {
     int conditionsIn;
@@ -54,6 +53,8 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         clickButton6.setOnClickListener(this);
         Button clickButton7 = findViewById(R.id.buttonCreate);
         clickButton7.setOnClickListener(this);
+        Button clickButton8 = findViewById(R.id.buttonInitialImport);
+        clickButton8.setOnClickListener(this);
     }
 
     private void changeNum(int view, Boolean plus) {
@@ -150,6 +151,11 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
                     setResult(RESULT_OK, intent);
                     finish();
                 }
+                break;
+            }
+            case R.id.buttonInitialImport: {
+                setResult(RESULT_IMPORT);
+                finish();
                 break;
             }
             case android.R.id.home : {

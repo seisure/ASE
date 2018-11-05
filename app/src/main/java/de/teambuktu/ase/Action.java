@@ -9,6 +9,7 @@ class Action extends TableEntry {
     protected ArrayList<Rule> rules = new ArrayList<>();
 
     public Action(int ruleCount) {
+
         for (int i = 0; i < ruleCount; i++) {
             rules.add(new Rule());
             rules.get(i).setRuleActionValue(false);

@@ -3,7 +3,7 @@
     <string name="dialog_yes">Ja</string>
     <string name="dialog_no">Nein</string>
     <string name="table">Auftragsannahme</string>
-    <string name="create">Anpassen</string>
+    <string name="create">Erstellen / Anpassen</string>
     <string name="createInitialTable">Tabelle bearbeiten</string>
 
     <string name="condition">Bedingung</string>
@@ -23,4 +23,8 @@
     <string name="clearTable">Alles löschen</string>
     <string name="clearTableAskFor">Sollen alle Tabelleninhalte gelöscht werden?</string>
     <string name="clearTableSuccess">Tabelle wurde gelöscht</string>
+    <string name="importCsv">Aus CSV importieren</string>
+    <string name="importCsvAskFor">Durch das Importieren wird die bestehende Tabelle überschrieben. Fortfahren?</string>
+    <string name="exportCSV">Als CSV exportieren</string>
+    <string name="share">Wie möchtest Du teilen?</string>
 </resources>

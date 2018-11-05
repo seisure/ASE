@@ -2,7 +2,6 @@ package de.teambuktu.ase;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,6 +9,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import static android.content.Context.MODE_PRIVATE;
+import static java.io.File.createTempFile;
 
 class StorageHelper {
 
