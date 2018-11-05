@@ -1,6 +1,5 @@
 package de.teambuktu.ase;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -11,8 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TableLayout;
-import android.widget.Toast;
 
 public class InitialActivity extends AppCompatActivity implements View.OnClickListener {
     int conditionsIn;

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +26,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -295,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    File csvContent = new StorageHelper(getApplicationContext()).exportToCSV(conditionList, actionList);
+                    File csvContent = FileHelper.exportToCSV(conditionList, actionList);
 
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/csv");
@@ -308,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.buttonImportCSV:
                 if (conditionList.isEmpty() && actionList.isEmpty()) {
-                    importTableEntriesFromCSV();
+                    showOpenFileActivity();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle(R.string.importCsv);
@@ -317,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            importTableEntriesFromCSV();
+                            showOpenFileActivity();
                         }
                     });
 
@@ -334,6 +335,19 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showOpenFileActivity() {
+        int hasReadPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (hasReadPermission != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+        }
+
+        Intent openFileIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        openFileIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        openFileIntent.setType("text/*");
+        openFileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivityForResult(openFileIntent, REQUEST_IMPORT_CSV);
     }
 
     @Override
@@ -378,47 +392,47 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-            StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
-            storageHelper.update(actionList, conditionList);
+                    StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
+                    storageHelper.update(actionList, conditionList);
+                }
+                break;
+            case REQUEST_IMPORT_CSV:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri;
+                    if (data != null) {
+                        Context context = getApplicationContext();
+                        uri = data.getData();
+
+                        InputStream stream;
+                        ArrayList<TableEntry> entries = new ArrayList<>();
+                        try {
+                            stream = context.getContentResolver().openInputStream(uri);
+                            entries = FileHelper.loadFromCSV(stream);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        conditionList = new ArrayList<>();
+                        actionList = new ArrayList<>();
+                        clearUITable();
+
+                        for (TableEntry entry : entries) {
+                            if (entry.getClass() == Condition.class) {
+                                conditionList.add((Condition) entry);
+                                addRowToUI((Condition) entry);
+                            } else if (entry.getClass() == Action.class) {
+                                actionList.add((Action) entry);
+                                addRowToUI((Action) entry);
+                            }
+                        }
+
+                        StorageHelper storageHelper = new StorageHelper(getApplicationContext());
+                        storageHelper.update(actionList, conditionList);
+                    }
+                }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void importTableEntriesFromCSV() {
-        Context context = getApplicationContext();
-        StorageHelper storageHelper = new StorageHelper(context);
-        String csvString = storageHelper.loadFromCSV(context);
-        String[] csv = csvString.split("\n");
-        int rules = csv[0].split(";").length - 2;
-
-        conditionList = new ArrayList<Condition>();
-        actionList = new ArrayList<Action>();
-        clearUITable();
-
-        for (String line : csv) {
-            String[] lineParts = line.split(";");
-            if (lineParts[0].equals("C")) {
-                Condition newCondition = new Condition(rules);
-                newCondition.setTitle(lineParts[1]);
-                int j = 0;
-                for (int i = 2; i < lineParts.length; i++) {
-                    newCondition.rules.set(j++, lineParts[i]);
-                }
-                conditionList.add(newCondition);
-                addRowToUI(newCondition);
-            }
-            else if (lineParts[0].equals("A")) {
-                Action newAction = new Action(rules);
-                newAction.setTitle(lineParts[1]);
-                int j = 0;
-                for (int i = 2; i < lineParts.length; i++) {
-                    newAction.rules.set(j++, lineParts[i].equals("1"));
-                }
-                actionList.add(newAction);
-                addRowToUI(newAction);
-            }
-        }
     }
 
     private void fnOnClickActionRule (View v, Action actionToAdd, int ruleIndex) {
@@ -498,9 +512,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        File toDelete = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "ASE.csv");
-        if (toDelete.exists())
-            toDelete.delete();
+        //File toDelete = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "ASE.csv");
+        //if (toDelete.exists())
+        //    toDelete.delete();
         super.onDestroy();
     }
 }
