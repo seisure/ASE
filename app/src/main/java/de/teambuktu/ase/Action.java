@@ -18,7 +18,7 @@ class Action extends TableEntry {
 
     protected void setNumberOfRules(int count) {
         if (count > rules.size()) {
-            for (int i = rules.size() - 1; i <= count - 1; i++) {
+            for (int i = rules.size(); i <= count - 1; i++) {
                 rules.add(new Rule());
                 rules.get(i).setRuleActionValue(false);
             }
