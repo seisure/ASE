@@ -20,9 +20,8 @@ public class FileHelper {
             builder.append('C').append(';');
             String title = condition.getTitle();
             builder.append(title == null ? "" : title).append(';');
-            for (String rule :
-                    condition.rules) {
-                builder.append(rule).append(';');
+            for (Rule rule : condition.rules) {
+                builder.append(rule.getRuleConditionValue()).append(';');
             }
             builder.deleteCharAt(builder.length()-1);
             builder.append('\n');
@@ -32,9 +31,8 @@ public class FileHelper {
             builder.append('A').append(';');
             String title = action.getTitle();
             builder.append(title == null ? "" : title).append(';');
-            for (Boolean rule :
-                    action.rules) {
-                builder.append(rule ? 1 : 0).append(';');
+            for (Rule rule : action.rules) {
+                builder.append(rule.getRuleActionValue() ? 1 : 0).append(';');
             }
             builder.deleteCharAt(builder.length()-1);
             builder.append('\n');
@@ -70,7 +68,7 @@ public class FileHelper {
                 newCondition.setTitle(lineParts[1]);
                 int j = 0;
                 for (int i = 2; i < lineParts.length; i++) {
-                    newCondition.rules.set(j++, lineParts[i]);
+                    newCondition.rules.get(j++).setRuleConditionValue(lineParts[i]);
                 }
                 entries.add(newCondition);
             }
@@ -79,7 +77,7 @@ public class FileHelper {
                 newAction.setTitle(lineParts[1]);
                 int j = 0;
                 for (int i = 2; i < lineParts.length; i++) {
-                    newAction.rules.set(j++, lineParts[i].equals("1"));
+                    newAction.rules.get(j++).setRuleActionValue(lineParts[i].equals("1"));
                 }
                 entries.add(newAction);
             }
