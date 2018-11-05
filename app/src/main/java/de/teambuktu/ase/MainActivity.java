@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_EDIT_TABLE = 0;
     private static final int REQUEST_EXPORT_CSV = 1;
     private static final int REQUEST_IMPORT_CSV = 2;
+    public static final int RESULT_IMPORT = 2;
 
     private void addRowToUI(final Action actionToAdd) {
         TableLayout table;
@@ -308,32 +309,36 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
             case R.id.buttonImportCSV:
-                if (conditionList.isEmpty() && actionList.isEmpty()) {
-                    showOpenFileActivity();
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(R.string.importCsv);
-                    builder.setMessage(R.string.importCsvAskFor);
-
-                    builder.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            showOpenFileActivity();
-                        }
-                    });
-
-                    builder.setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-                    builder.show();
-                }
+                showImportDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showImportDialog() {
+        if (conditionList.isEmpty() && actionList.isEmpty()) {
+            showOpenFileActivity();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.importCsv);
+            builder.setMessage(R.string.importCsvAskFor);
+
+            builder.setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    showOpenFileActivity();
+                }
+            });
+
+            builder.setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
         }
     }
 
@@ -394,6 +399,8 @@ public class MainActivity extends AppCompatActivity {
 
                     StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
                     storageHelper.update(actionList, conditionList);
+                } else if (resultCode == RESULT_IMPORT) {
+                    showImportDialog();
                 }
                 break;
             case REQUEST_IMPORT_CSV:
