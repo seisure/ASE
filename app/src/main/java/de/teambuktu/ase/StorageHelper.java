@@ -2,6 +2,11 @@ package de.teambuktu.ase;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,63 +31,52 @@ class StorageHelper {
         sharedPreferences.edit().remove(ACTIONS).remove(CONDITIONS).apply();
 
         if (actionList != null) {
-            Set<String> actionSet = new HashSet<>();
+            JSONArray actionArray = new JSONArray();
             for (Action action : actionList) {
-                actionSet.add(action.toJSON().toString());
+                actionArray.put(action.toJSON());
             }
-            sharedPreferences.edit().putStringSet(ACTIONS, actionSet).apply();
+            sharedPreferences.edit().putString(ACTIONS, actionArray.toString()).apply();
         }
         if (conditionList != null) {
-            Set<String> conditionSet = new HashSet<>();
+            JSONArray conditionArray = new JSONArray();
             for (Condition condition : conditionList) {
-                conditionSet.add(condition.toJSON().toString());
+                conditionArray.put(condition.toJSON());
             }
-            sharedPreferences.edit().putStringSet(CONDITIONS, conditionSet).apply();
+            sharedPreferences.edit().putString(CONDITIONS, conditionArray.toString()).apply();
         }
     }
 
     ArrayList<Action> loadActions() {
-        Set<String> actionSet = sharedPreferences.getStringSet(ACTIONS, null);
-
+        String actionsString = sharedPreferences.getString(ACTIONS, null);
         ArrayList<Action> actionList = new ArrayList<>();
 
-        if (actionSet != null) {
-            HashMap<Integer, Action> actionHashMap = new HashMap<>();
-            Iterator<String> iterator = actionSet.iterator();
-            while (iterator.hasNext()) {
-                String actionAsString = iterator.next();
-                Action action = Action.fromString(actionAsString);
+        try {
+            JSONArray actionsJsonArray = new JSONArray(actionsString);
+            for (int i = 0; i < actionsJsonArray.length(); i++) {
+                Action action = Action.fromString(actionsJsonArray.get(i).toString());
                 actionList.add(action);
-                //actionHashMap.put(action.ID, action);
             }
-//            Iterator<Action> actionIterator = actionHashMap.values().iterator();
-//            while (actionIterator.hasNext()) {
-//                Action currentAction = actionIterator.next();
-//                actionList.add(currentAction);
-//            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
         return actionList;
     }
+
     ArrayList<Condition> loadConditions() {
-        Set<String> conditionSet = sharedPreferences.getStringSet(CONDITIONS, null);
+        String conditionsString = sharedPreferences.getString(CONDITIONS, null);
         ArrayList<Condition> conditionList = new ArrayList<>();
 
-        if (conditionSet != null) {
-            HashMap<Integer, Condition> conditionHashMap = new HashMap<>();
-            Iterator<String> iterator = conditionSet.iterator();
-            while (iterator.hasNext()) {
-                String conditionAsString = iterator.next();
-                Condition condition = Condition.fromString(conditionAsString);
+        try {
+            JSONArray conditionsJsonArray = new JSONArray(conditionsString);
+            for (int i = 0; i < conditionsJsonArray.length(); i++) {
+                Condition condition = Condition.fromString(conditionsJsonArray.get(i).toString());
                 conditionList.add(condition);
-                //conditionHashMap.put(condition.ID, condition);
             }
-
-//            Iterator<Condition> conditionIterator = conditionHashMap.values().iterator();
-//            while (conditionIterator.hasNext()) {
-//                Condition currentCondition = conditionIterator.next();
-//                conditionList.add(currentCondition);
-//            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
         return conditionList;
     }
 }
