@@ -47,7 +47,7 @@ class StorageHelper {
     }
 
     ArrayList<Action> loadActions() {
-        String actionsString = sharedPreferences.getString(ACTIONS, null);
+        String actionsString = sharedPreferences.getString(ACTIONS, "");
         ArrayList<Action> actionList = new ArrayList<>();
 
         try {
@@ -64,7 +64,7 @@ class StorageHelper {
     }
 
     ArrayList<Condition> loadConditions() {
-        String conditionsString = sharedPreferences.getString(CONDITIONS, null);
+        String conditionsString = sharedPreferences.getString(CONDITIONS, "");
         ArrayList<Condition> conditionList = new ArrayList<>();
 
         try {
