@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -89,6 +91,16 @@ public class MainActivity extends AppCompatActivity {
             row.addView(actionRule);
             actionRule.setChecked(actionToAdd.rules.get(i).getRuleActionValue());
             actionRule.setEms(2);
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][]{
+                            new int[]{android.R.attr.state_enabled}
+                    },
+                    new int[] {
+                            getColor(R.color.colorPrimaryDark)
+                    }
+            );
+
+            actionRule.setButtonTintList(colorStateList);
 
             actionRule.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -102,11 +114,11 @@ public class MainActivity extends AppCompatActivity {
         final ImageButton buttonDelete = new ImageButton(this);
         buttonDelete.setImageResource(R.drawable.close);
         buttonDelete.setImageAlpha(150);
-        buttonDelete.setPadding(20,0,0,0);
+        buttonDelete.setPadding(20,15,0,15);
         buttonDelete.setForegroundGravity(Gravity.CENTER);
-        row.setVerticalGravity(Gravity.CENTER_VERTICAL);
         buttonDelete.setBackground(null);
         buttonDelete.setTag(actionToAdd);
+        row.setVerticalGravity(Gravity.CENTER_VERTICAL);
         row.addView(buttonDelete);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,7 +176,9 @@ public class MainActivity extends AppCompatActivity {
             conditionRule = new TextView(this);
             conditionRule.setText(conditionToAdd.rules.get(i).getRuleConditionValue());
             conditionRule.setEms(2);
+            conditionRule.setPadding(5,15,5,15);
             conditionRule.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            conditionRule.setTextColor(getColor(R.color.colorPrimaryDark));
             conditionRule.setClickable(true);
             conditionRule.setFocusable(true);
             conditionRule.setOnClickListener(new View.OnClickListener() {
@@ -180,11 +194,11 @@ public class MainActivity extends AppCompatActivity {
         final ImageButton buttonDelete = new ImageButton(this);
         buttonDelete.setImageResource(R.drawable.close);
         buttonDelete.setImageAlpha(150);
-        buttonDelete.setPadding(20,0,0,0);
+        buttonDelete.setPadding(20,15,0,15);
         buttonDelete.setForegroundGravity(Gravity.CENTER);
-        row.setVerticalGravity(Gravity.CENTER_VERTICAL);
         buttonDelete.setBackground(null);
         buttonDelete.setTag(conditionToAdd);
+        row.setVerticalGravity(Gravity.CENTER_VERTICAL);
         row.addView(buttonDelete);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addRuleColHeader(int iRuleCount) {
         TextView columnText = new TextView(this);
-        TableLayout table = (TableLayout)findViewById(R.id.tableHeader);
+        TableLayout table = findViewById(R.id.tableHeader);
         TableRow row = (TableRow) table.getChildAt(0);
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);

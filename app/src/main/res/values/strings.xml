@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">ASE</string>
+    <string name="app_name">decise</string>
     <string name="dialog_yes">Ja</string>
     <string name="dialog_no">Nein</string>
     <string name="table">Auftragsannahme</string>
-    <string name="create">Erstellen / Anpassen</string>
+    <string name="create">Übernehmen</string>
+    <string name="cancel">Abbrechen</string>
     <string name="createInitialTable">Tabelle bearbeiten</string>
 
     <string name="condition">Bedingung</string>

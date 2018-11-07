@@ -26,6 +26,7 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.createInitialTable);
         }
 
         Intent intent = this.getIntent();
@@ -55,6 +56,8 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         clickButton7.setOnClickListener(this);
         Button clickButton8 = findViewById(R.id.buttonInitialImport);
         clickButton8.setOnClickListener(this);
+        Button clickButton9 = findViewById(R.id.buttonCancel);
+        clickButton9.setOnClickListener(this);
     }
 
     private void changeNum(int view, Boolean plus) {
@@ -158,7 +161,8 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
                 finish();
                 break;
             }
-            case android.R.id.home : {
+            case R.id.buttonCancel:
+            case android.R.id.home: {
                 setResult(RESULT_CANCELED);
                 finish();
                 break;
