@@ -3,7 +3,7 @@ package de.teambuktu.ase;
 public class Rule {
     private int ruleHash;
     private String ruleConditionValue;
-    private boolean ruleActionValue = false;
+    private boolean ruleActionValue;
 
     public String getRuleConditionValue() {
         return ruleConditionValue;

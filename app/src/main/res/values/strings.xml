@@ -17,6 +17,9 @@
     <string name="addActionRow">+A</string>
     <string name="addConditionRow">+B</string>
     <string name="addRuleColumn">+R</string>
+    <string name="prefixActionRow">A</string>
+    <string name="prefixConditionRow">B</string>
+    <string name="prefixRuleCol">R</string>
     <string name="ruleCount">Anzahl der Regeln anpassen</string>
     <string name="warning">Achtung!</string>
     <string name="warningForDelete">Durch die aktuelle Auswahl werden die letzten der folgende Einträge gelöscht:\n\n</string>
