@@ -1,17 +1,9 @@
 package de.teambuktu.ase;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import static android.content.Context.MODE_PRIVATE;
 
 class Condition extends TableEntry {
     protected ArrayList<Rule> rules = new ArrayList<>();
@@ -41,7 +33,6 @@ class Condition extends TableEntry {
             JSONObject json = new JSONObject(serialized);
             Condition condition = null;
             String title = null;
-            int ID = -1;
             if (json.has("title")) title = json.getString("title");
             if (json.has("rules")) {
                 JSONObject rulesJson = json.getJSONObject("rules");
@@ -50,9 +41,7 @@ class Condition extends TableEntry {
                 for (int i = 0; i < rulesJson.length(); i++) {
                     condition.rules.add(new Rule());
                     Rule ruleImportDestination = condition.rules.get(i);
-                    int currentRuleHash = (int) ((JSONObject)rulesJson.get(Integer.toString(i))).get("ruleHash");
                     String currentConditionValue = (String) ((JSONObject)rulesJson.get(Integer.toString(i))).get("ruleConditionValue");
-                    ruleImportDestination.setRuleHash(currentRuleHash);
                     ruleImportDestination.setRuleConditionValue(currentConditionValue);
                 }
                 condition.setTitle(title);
@@ -70,7 +59,6 @@ class Condition extends TableEntry {
             JSONObject jsonObjectParent = new JSONObject();
             for (int i = 0; i < this.rules.size(); i++) {
                 JSONObject jsonObjectChild = new JSONObject();
-                jsonObjectChild.put("ruleHash", this.rules.get(i).getRuleHash());
                 jsonObjectChild.put("ruleConditionValue", this.rules.get(i).getRuleConditionValue());
                 jsonObjectParent.put(Integer.toString(i), jsonObjectChild);
             }

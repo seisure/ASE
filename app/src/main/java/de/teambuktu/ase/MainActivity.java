@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         row.addView(columnID);
         row.addView(columnText);
 
-        columnID.setText("A" + actionList.indexOf(actionToAdd));
+        columnID.setText(getString(R.string.prefixActionRow) + actionList.indexOf(actionToAdd));
         columnID.setEms(2);
         columnID.setIncludeFontPadding(true);
         columnID.setPadding(10, 0, 0, 0);
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         row.addView(columnID);
         row.addView(columnText);
 
-        columnID.setText("B" + conditionList.indexOf(conditionToAdd));
+        columnID.setText(getString(R.string.prefixConditionRow) + conditionList.indexOf(conditionToAdd));
         columnID.setEms(2);
         columnID.setIncludeFontPadding(true);
         columnID.setPadding(10, 0, 0, 0);
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
         columnText.setEms(2);
-        columnText.setText("R" + iRuleCount);
+        columnText.setText(getString(R.string.prefixRuleCol) + iRuleCount);
         final Context context = this.getApplicationContext();
         final ImageButton buttonDelete = new ImageButton(this);
         buttonDelete.setImageResource(R.drawable.close);
@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
     private void clearHeaderTable () {
         setTableVisible(R.id.tableHeader, false);
         TextView columnText = new TextView(this);
-        TableLayout table = (TableLayout)findViewById(R.id.tableHeader);
+        TableLayout table = findViewById(R.id.tableHeader);
         TableRow row = (TableRow) table.getChildAt(0);
         row.removeViews(2, row.getChildCount() - 2);
         return;
@@ -467,8 +467,7 @@ public class MainActivity extends AppCompatActivity {
                     clearHeaderTable();
                     createHeaderColsRules();
 
-                    StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
-                    storageHelper.update(actionList, conditionList);
+                    updateStorage(getApplicationContext());
                 } else if (resultCode == RESULT_IMPORT) {
                     showImportDialog();
                 }
@@ -682,7 +681,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setTableVisible (int iTableId, boolean bVisible) {
-        TableLayout table = (TableLayout)findViewById(iTableId);
+        TableLayout table = findViewById(iTableId);
         if (bVisible) {
             table.setVisibility(View.VISIBLE);
         } else if (!bVisible) {
