@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < actionToAdd.rules.size(); i++) {
             final int ruleIndex = i;
             actionRule = new CheckBox(this);
-            row.addView(actionRule);
             actionRule.setChecked(actionToAdd.rules.get(i).getRuleActionValue());
             actionRule.setEms(2);
             ColorStateList colorStateList = new ColorStateList(
@@ -112,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     fnOnClickActionRule(v, actionToAdd, ruleIndex);
                 }
             });
+            row.addView(actionRule);
         }
 
         final Context context = this.getApplicationContext();
