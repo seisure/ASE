@@ -34,7 +34,6 @@ class Action extends TableEntry {
             JSONObject json = new JSONObject(serialized);
             Action action = null;
             String title = null;
-            int ID = -1;
             if (json.has("title")) title = json.getString("title");
             if (json.has("rules")) {
                 JSONObject rulesJson = json.getJSONObject("rules");
@@ -43,9 +42,7 @@ class Action extends TableEntry {
                 for (int i = 0; i < rulesJson.length(); i++) {
                     action.rules.add(new Rule());
                     Rule ruleImportDestination = action.rules.get(i);
-                    int currentRuleHash = (int) ((JSONObject)rulesJson.get(Integer.toString(i))).get("ruleHash");
                     Boolean currentActionValue = (Boolean) ((JSONObject)rulesJson.get(Integer.toString(i))).get("ruleActionValue");
-                    ruleImportDestination.setRuleHash(currentRuleHash);
                     ruleImportDestination.setRuleActionValue(currentActionValue);
                 }
                 action.setTitle(title);
@@ -63,7 +60,6 @@ class Action extends TableEntry {
             JSONObject jsonObjectParent = new JSONObject();
             for (int i = 0; i < this.rules.size(); i++) {
                 JSONObject jsonObjectChild = new JSONObject();
-                jsonObjectChild.put("ruleHash", this.rules.get(i).getRuleHash());
                 jsonObjectChild.put("ruleActionValue", this.rules.get(i).getRuleActionValue());
                 jsonObjectParent.put(Integer.toString(i), jsonObjectChild);
             }

@@ -5,16 +5,10 @@ import android.content.SharedPreferences;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 import static android.content.Context.MODE_PRIVATE;
-import static java.io.File.createTempFile;
 
 class StorageHelper {
 
