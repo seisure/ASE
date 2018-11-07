@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -49,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
         table = findViewById(R.id.tableAction);
 
         final TableRow row = new TableRow(this);
-        TextView columnID = new TextView(this);
-        EditText columnText = new EditText(this);
+        final TextView columnID = new TextView(this);
+        final EditText columnText = new EditText(this);
 
         table.addView(row);
         row.addView(columnID);
@@ -75,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int index = actionList.indexOf(actionToAdd);
                 actionList.get(index).setTitle(s.toString());
+                if (count != 0 && s.charAt(start) == ';') {
+                    String replace = s.toString().replace(";", "");
+                    columnText.setText(replace);
+                    columnText.setError(getString(R.string.noSemicolons));
+                }
             }
 
             @Override
@@ -135,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
         table = findViewById(R.id.tableCondition);
 
         final TableRow row = new TableRow(this);
-        TextView columnID = new TextView(this);
-        EditText columnText = new EditText(this);
+        final TextView columnID = new TextView(this);
+        final EditText columnText = new EditText(this);
 
         table.addView(row);
         row.addView(columnID);
@@ -161,6 +165,11 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 final int conditionIndex = conditionList.indexOf(conditionToAdd);
                 conditionList.get(conditionIndex).setTitle(s.toString());
+                if (count != 0 && s.charAt(start) == ';') {
+                    String replace = s.toString().replace(";", "");
+                    columnText.setText(replace);
+                    columnText.setError(getString(R.string.noSemicolons));
+                }
             }
 
             @Override
@@ -484,6 +493,10 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             stream = context.getContentResolver().openInputStream(uri);
                             entries = FileHelper.loadFromCSV(stream);
+                            if (entries.isEmpty()) {
+                                Toast.makeText(context, R.string.invalidCSV, Toast.LENGTH_LONG).show();
+                                break;
+                            }
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -505,10 +518,11 @@ public class MainActivity extends AppCompatActivity {
                         clearHeaderTable();
                         createHeaderColsRules();
 
-                        StorageHelper storageHelper = new StorageHelper(getApplicationContext());
-                        storageHelper.update(actionList, conditionList);
+                        updateStorage(getApplicationContext());
+                        Toast.makeText(context, R.string.validCSV, Toast.LENGTH_LONG).show();
                     }
                 }
+                break;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -516,31 +530,28 @@ public class MainActivity extends AppCompatActivity {
 
     private void fnOnClickActionRule (View v, Action actionToAdd, int ruleIndex) {
         final int index = actionList.indexOf(actionToAdd);
-        if (((CheckBox) v).isChecked()) {
-            actionList.get(index).rules.get(ruleIndex).setRuleActionValue(true);
-        }
-        else {
-            actionList.get(index).rules.get(ruleIndex).setRuleActionValue(false);
-        }
-        StorageHelper storageHelper = new StorageHelper(getApplicationContext());
-        storageHelper.update(actionList, conditionList);
+        actionList.get(index).rules.get(ruleIndex).setRuleActionValue(((CheckBox) v).isChecked());
+        updateStorage(getApplicationContext());
     }
     
     private void fnOnClickConditionRule (View v, Condition conditionToAdd, int ruleIndex) {
         String currentText = (String) ((TextView) v).getText();
         int conditionIndex = conditionList.indexOf(conditionToAdd);
-        if (currentText.equals("-")) {
-            ((TextView) v).setText("J");
-            conditionList.get(conditionIndex).rules.get(ruleIndex).setRuleConditionValue("J");
-        } else if (currentText.equals("J")) {
-            ((TextView) v).setText("N");
-            conditionList.get(conditionIndex).rules.get(ruleIndex).setRuleConditionValue("N");
-        } else if (currentText.equals("N")) {
-            ((TextView) v).setText("-");
-            conditionList.get(conditionIndex).rules.get(ruleIndex).setRuleConditionValue("-");
+        switch (currentText) {
+            case "-":
+                ((TextView) v).setText("J");
+                conditionList.get(conditionIndex).rules.get(ruleIndex).setRuleConditionValue("J");
+                break;
+            case "J":
+                ((TextView) v).setText("N");
+                conditionList.get(conditionIndex).rules.get(ruleIndex).setRuleConditionValue("N");
+                break;
+            case "N":
+                ((TextView) v).setText("-");
+                conditionList.get(conditionIndex).rules.get(ruleIndex).setRuleConditionValue("-");
+                break;
         }
-        StorageHelper storageHelper = new StorageHelper(getApplicationContext());
-        storageHelper.update(actionList, conditionList);
+        updateStorage(getApplicationContext());
     }
 
     private void fnOnClickButtonDeleteRow (Object list, View v, Context context, TableRow row) {
