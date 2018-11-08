@@ -42,7 +42,7 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".InitialActivity"></activity>
+        <activity android:name=".InitialActivity" android:screenOrientation="portrait"></activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

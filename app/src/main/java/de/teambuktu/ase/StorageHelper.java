@@ -41,10 +41,10 @@ class StorageHelper {
     }
 
     ArrayList<Action> loadActions() {
-        String actionsString = sharedPreferences.getString(ACTIONS, "");
         ArrayList<Action> actionList = new ArrayList<>();
 
         try {
+            String actionsString = sharedPreferences.getString(ACTIONS, "");
             JSONArray actionsJsonArray = new JSONArray(actionsString);
             for (int i = 0; i < actionsJsonArray.length(); i++) {
                 Action action = Action.fromString(actionsJsonArray.get(i).toString());
@@ -52,16 +52,18 @@ class StorageHelper {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (ClassCastException ec) {
+            sharedPreferences.edit().clear().apply();
         }
 
         return actionList;
     }
 
     ArrayList<Condition> loadConditions() {
-        String conditionsString = sharedPreferences.getString(CONDITIONS, "");
         ArrayList<Condition> conditionList = new ArrayList<>();
 
         try {
+            String conditionsString = sharedPreferences.getString(CONDITIONS, "");
             JSONArray conditionsJsonArray = new JSONArray(conditionsString);
             for (int i = 0; i < conditionsJsonArray.length(); i++) {
                 Condition condition = Condition.fromString(conditionsJsonArray.get(i).toString());
@@ -69,6 +71,8 @@ class StorageHelper {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (ClassCastException ec) {
+            sharedPreferences.edit().clear().apply();
         }
 
         return conditionList;
