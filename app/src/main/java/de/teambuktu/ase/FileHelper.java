@@ -59,16 +59,26 @@ public class FileHelper {
     static ArrayList<TableEntry> loadFromCSV(InputStream file) {
         ArrayList<String> csv = readFromFile(file);
         int rules = csv.get(0).split(";").length - 2;
+        if (rules < 0) {
+            return new ArrayList<>();
+        }
         ArrayList<TableEntry> entries = new ArrayList<>();
 
         for (String line : csv) {
             String[] lineParts = line.split(";");
+            if (lineParts.length != rules + 2 || !lineParts[0].equals("A") && !lineParts[0].equals("C")) {
+                return new ArrayList<>();
+            }
             if (lineParts[0].equals("C")) {
                 Condition newCondition = new Condition(rules);
                 newCondition.setTitle(lineParts[1]);
                 int j = 0;
                 for (int i = 2; i < lineParts.length; i++) {
-                    newCondition.rules.get(j++).setRuleConditionValue(lineParts[i]);
+                    if (lineParts[i].equals("J") || lineParts[i].equals("N") || lineParts[i].equals("-")) {
+                        newCondition.rules.get(j++).setRuleConditionValue(lineParts[i]);
+                    } else {
+                        return new ArrayList<>();
+                    }
                 }
                 entries.add(newCondition);
             }
@@ -77,7 +87,11 @@ public class FileHelper {
                 newAction.setTitle(lineParts[1]);
                 int j = 0;
                 for (int i = 2; i < lineParts.length; i++) {
-                    newAction.rules.get(j++).setRuleActionValue(lineParts[i].equals("1"));
+                    if (lineParts[i].equals("1") || lineParts[i].equals("0")) {
+                        newAction.rules.get(j++).setRuleActionValue(lineParts[i].equals("1"));
+                    } else {
+                        return new ArrayList<>();
+                    }
                 }
                 entries.add(newAction);
             }

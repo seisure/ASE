@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">ASE</string>
+    <string name="app_name">decise</string>
     <string name="dialog_yes">Ja</string>
     <string name="dialog_no">Nein</string>
     <string name="table">Auftragsannahme</string>
-    <string name="create">Erstellen / Anpassen</string>
+    <string name="create">Übernehmen</string>
+    <string name="cancel">Abbrechen</string>
     <string name="createInitialTable">Tabelle bearbeiten</string>
 
     <string name="condition">Bedingung</string>
@@ -16,6 +17,9 @@
     <string name="addActionRow">+A</string>
     <string name="addConditionRow">+B</string>
     <string name="addRuleColumn">+R</string>
+    <string name="prefixActionRow">A</string>
+    <string name="prefixConditionRow">B</string>
+    <string name="prefixRuleCol">R</string>
     <string name="ruleCount">Anzahl der Regeln anpassen</string>
     <string name="warning">Achtung!</string>
     <string name="warningForDelete">Durch die aktuelle Auswahl werden die letzten der folgende Einträge gelöscht:\n\n</string>
@@ -23,8 +27,11 @@
     <string name="clearTable">Alles löschen</string>
     <string name="clearTableAskFor">Sollen alle Tabelleninhalte gelöscht werden?</string>
     <string name="clearTableSuccess">Tabelle wurde gelöscht</string>
+    <string name="noSemicolons">\';\' ungültig</string>
     <string name="importCsv">Aus CSV importieren</string>
     <string name="importCsvAskFor">Durch das Importieren wird die bestehende Tabelle überschrieben. Fortfahren?</string>
+    <string name="validCSV">Erfolgreich importiert</string>
+    <string name="invalidCSV">Die CSV-Datei ist ungültig und wurde deshalb nicht importiert.</string>
     <string name="exportCSV">Als CSV exportieren</string>
     <string name="share">Wie möchtest Du teilen?</string>
 </resources>
