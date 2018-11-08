@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             final int ruleIndex = i;
             actionRule = new CheckBox(this);
             actionRule.setChecked(actionToAdd.rules.get(i).getRuleActionValue());
-            actionRule.setEms(2);
+            actionRule.setEms(getEmsForRuleCol(i));
             ColorStateList colorStateList = new ColorStateList(
                     new int[][]{
                             new int[]{android.R.attr.state_enabled}
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             final int ruleIndex = i;
             conditionRule = new TextView(this);
             conditionRule.setText(conditionToAdd.rules.get(i).getRuleConditionValue());
-            conditionRule.setEms(2);
+            conditionRule.setEms(getEmsForRuleCol(i));
             conditionRule.setPadding(5,15,5,15);
             conditionRule.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             conditionRule.setTextColor(getColor(R.color.colorPrimaryDark));
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
-        columnText.setEms(2);
+        columnText.setEms(getEmsForRuleCol(iRuleCount));
         columnText.setText(getString(R.string.prefixRuleCol) + iRuleCount);
         final Context context = this.getApplicationContext();
         final ImageButton buttonDelete = new ImageButton(this);
@@ -664,6 +664,19 @@ public class MainActivity extends AppCompatActivity {
 
     private int getRuleIndexInRow(ImageButton button) {
         return ((TableRow)(button.getParent().getParent())).indexOfChild((View)button.getParent()) - 2;
+    }
+
+    private int getEmsForRuleCol (int i) {
+        int numberLength = getNumberLength(i);
+        int emsToReturn = 2;
+        if (numberLength != 1) {
+            emsToReturn = numberLength;
+        }
+        return emsToReturn;
+    }
+
+    private int getNumberLength (int i) {
+        return Integer.toString(i).length();
     }
 
     private void setNumberOfRules(int count) {
