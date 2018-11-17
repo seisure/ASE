@@ -15,21 +15,24 @@ class Condition extends TableEntry {
         }
     }
 
-    public Boolean isComplete(){
+    public Boolean isComplete() {
         Boolean rulesHaveTrue = false;
         Boolean rulesHaveFalse = false;
 
         for (Rule rule: rules) {
-                switch (rule.getRuleConditionValue()) {
-                    case "J":
-                        rulesHaveTrue = true;
-                        break;
-                    case "N":
-                        rulesHaveFalse = true;
-                        break;
-                    case "-":
-                        return true;
-                }
+            switch (rule.getRuleConditionValue()) {
+                case "J":
+                    rulesHaveTrue = true;
+                    break;
+                case "N":
+                    rulesHaveFalse = true;
+                    break;
+                case "-":
+                    return true;
+
+                default:
+                    return false;
+            }
         }
         if (rulesHaveTrue && rulesHaveFalse) {
             return true;
