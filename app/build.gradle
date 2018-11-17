@@ -1,4 +1,22 @@
 apply plugin: 'com.android.application'
+apply plugin: 'checkstyle'
+
+task checkstyleMain(type: Checkstyle) {
+    source 'src/main/java'
+    classpath = files()
+}
+
+checkstyle {
+    ignoreFailures = false
+    toolVersion = '8.14'
+    showViolations = true
+    configFile = file('google_checks_814.xml')
+}
+
+
+project.afterEvaluate {
+    preBuild.dependsOn('checkstyleMain')
+}
 
 android {
     compileSdkVersion 28
