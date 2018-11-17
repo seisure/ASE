@@ -193,6 +193,11 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     fnOnClickConditionRule(v, conditionToAdd, ruleIndex);
+                    if(conditionToAdd.isComplete()) {
+                        ((TableRow)(v.getParent())).setBackgroundColor(getColor(R.color.colorBackgound));
+                    } else {
+                        ((TableRow)(v.getParent())).setBackgroundColor(getColor(R.color.colorRedMel));
+                    }
                 }
             });
             row.addView(conditionRule);
