@@ -145,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
         row.addView(columnID);
         row.addView(columnText);
 
-        columnID.setText(getString(R.string.prefixConditionRow) + conditionList.indexOf(conditionToAdd));
+        columnID.setText(getString(R.string.prefixConditionRow)
+                + conditionList.indexOf(conditionToAdd));
         columnID.setEms(2);
         columnID.setIncludeFontPadding(true);
         columnID.setPadding(10, 0, 0, 0);
@@ -193,6 +194,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     fnOnClickConditionRule(v, conditionToAdd, ruleIndex);
+                    boolean testComplete = Completeness.isListComplete(conditionList);
+                    System.out.println(testComplete);
                 }
             });
             row.addView(conditionRule);
