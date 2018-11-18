@@ -1,11 +1,11 @@
 package de.teambuktu.ase;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RuleRow {
-    ArrayList<Rule> row;
+    List<Rule> row;
 
-    public RuleRow(ArrayList<Rule> row) {
+    public RuleRow(List<Rule> row) {
         this.row = row;
     }
 

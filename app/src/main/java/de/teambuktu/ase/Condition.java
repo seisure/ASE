@@ -6,7 +6,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 class Condition extends TableEntry {
-    protected ArrayList<Rule> rules = new ArrayList<>();
 
     public Condition(int ruleCount) {
         for (int i = 0; i < ruleCount; i++) {

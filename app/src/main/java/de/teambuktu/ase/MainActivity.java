@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Action> actionList = new ArrayList<>();
@@ -108,6 +110,12 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     fnOnClickActionRule(v, actionToAdd, ruleIndex);
+                    List<Pair<Integer, Integer>> badRows = Utility
+                            .testForConsistency(conditionList, actionList);
+                    for (Pair pair: badRows) {
+                        System.out.println("Wiederspruch mit Spalten: "
+                                + pair.first + " " + pair.second);
+                    }
                 }
             });
             row.addView(actionRule);
@@ -194,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     fnOnClickConditionRule(v, conditionToAdd, ruleIndex);
-                    boolean testComplete = Completeness.isListComplete(conditionList);
+                    boolean testComplete = Utility.isListComplete(conditionList);
                     System.out.println(testComplete);
                 }
             });
@@ -222,7 +230,6 @@ public class MainActivity extends AppCompatActivity {
     private void addRuleColHeader(int iRuleCount) {
         TextView columnText = new TextView(this);
         TableLayout table = findViewById(R.id.tableHeader);
-        TableRow row = (TableRow) table.getChildAt(0);
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -234,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
         buttonDelete.setImageAlpha(150);
         buttonDelete.setPadding(-35,0,0,20); //TODO check for center horizontal
         buttonDelete.setForegroundGravity(Gravity.CENTER);
+        TableRow row = (TableRow) table.getChildAt(0);
         row.setVerticalGravity(Gravity.BOTTOM);
         buttonDelete.setBackground(null);
         buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -274,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void clearHeaderTable () {
+    private void clearHeaderTable() {
         setTableVisible(R.id.tableHeader, false);
         TextView columnText = new TextView(this);
         TableLayout table = findViewById(R.id.tableHeader);
@@ -362,7 +370,8 @@ public class MainActivity extends AppCompatActivity {
                 clearTableDialog();
                 return true;
             case R.id.buttonExportCSV:
-                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                 }
 
