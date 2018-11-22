@@ -20,10 +20,13 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -369,29 +372,104 @@ public class MainActivity extends AppCompatActivity {
             case R.id.buttonClearTable:
                 clearTableDialog();
                 return true;
-            case R.id.buttonExportCSV:
-                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-                }
-
-                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    File csvContent = FileHelper.exportToCSV(conditionList, actionList);
-
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.setType("text/csv");
-                    Uri fileUri = FileProvider.getUriForFile(this, "com.myfileprovider", csvContent);
-                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-                    this.startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
-                }
-
+            case R.id.buttonExport:
+                showExportDialog();
                 return true;
             case R.id.buttonImportCSV:
                 showImportDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showExportDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle(R.string.export);
+        dialogBuilder.setMessage(R.string.exportAskFor);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_export, null);
+        final EditText etFileName = dialogView.findViewById(R.id.editTextFileName);
+        Button btnDoExport = dialogView.findViewById(R.id.buttonDoExport);
+        Button cancel = dialogView.findViewById(R.id.buttonCancelExport);
+        final RadioGroup radioGroup = dialogView.findViewById(R.id.radioGroupExportFormat);
+        dialogBuilder.setView(dialogView);
+        final AlertDialog dialog = dialogBuilder.create();
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.rbExportJava:
+                        etFileName.setText(getString(R.string.app_name) + getString(R.string.extJava));
+                        break;
+                    case R.id.rbExportCS:
+                        etFileName.setText(getString(R.string.app_name) + getString(R.string.extCs));
+                        break;
+                    case R.id.rbExportCSV:
+                        etFileName.setText(getString(R.string.app_name) + getString(R.string.extCsv));
+                        break;
+                }
+            }
+        });
+
+        btnDoExport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String filename = etFileName.getText().toString();
+                Codegenerator codegenerator;
+                String code;
+
+                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                }
+
+                File fileToShare;
+
+                switch(radioGroup.getCheckedRadioButtonId()) {
+                    case R.id.rbExportJava:
+                        codegenerator = new Codegenerator();
+                        code = codegenerator.generateCode(conditionList, actionList);
+                        fileToShare = FileHelper.buildFile(code, filename);
+                        showShareActivity(fileToShare);
+                        dialog.cancel();
+                        break;
+                    case R.id.rbExportCS:
+                        codegenerator = new Codegenerator();
+                        code = codegenerator.generateCode(conditionList, actionList);
+                        fileToShare = FileHelper.buildFile(code, filename);
+                        showShareActivity(fileToShare);
+                        dialog.cancel();
+                        break;
+                    case R.id.rbExportCSV:
+                        fileToShare = FileHelper.exportToCSV(conditionList, actionList, filename);
+                        showShareActivity(fileToShare);
+                        dialog.cancel();
+                        break;
+                    default:
+                        Toast.makeText(MainActivity.this, R.string.warningNoFormat, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void showShareActivity(File fileToShare) {
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/csv");
+            Uri fileUri = FileProvider.getUriForFile(this, "com.myfileprovider", fileToShare);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            this.startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
         }
     }
 
