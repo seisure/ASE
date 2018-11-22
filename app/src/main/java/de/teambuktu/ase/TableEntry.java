@@ -1,12 +1,16 @@
 package de.teambuktu.ase;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 abstract class TableEntry {
     private String title;
 
-    public String getTitle(){
+    protected ArrayList<Rule> rules = new ArrayList<>();
+
+    public String getTitle() {
         return this.title;
     }
 

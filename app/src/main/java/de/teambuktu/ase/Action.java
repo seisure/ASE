@@ -1,12 +1,12 @@
 package de.teambuktu.ase;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 
 class Action extends TableEntry {
-    protected ArrayList<Rule> rules = new ArrayList<>();
 
     public Action(int ruleCount) {
 
@@ -34,7 +34,9 @@ class Action extends TableEntry {
             JSONObject json = new JSONObject(serialized);
             Action action = null;
             String title = null;
-            if (json.has("title")) title = json.getString("title");
+            if (json.has("title")) {
+                title = json.getString("title");
+            }
             if (json.has("rules")) {
                 JSONObject rulesJson = json.getJSONObject("rules");
                 action = new Action(rulesJson.length());
@@ -42,7 +44,8 @@ class Action extends TableEntry {
                 for (int i = 0; i < rulesJson.length(); i++) {
                     action.rules.add(new Rule());
                     Rule ruleImportDestination = action.rules.get(i);
-                    Boolean currentActionValue = (Boolean) ((JSONObject)rulesJson.get(Integer.toString(i))).get("ruleActionValue");
+                    Boolean currentActionValue = (Boolean) ((JSONObject)rulesJson
+                            .get(Integer.toString(i))).get("ruleActionValue");
                     ruleImportDestination.setRuleActionValue(currentActionValue);
                 }
                 action.setTitle(title);

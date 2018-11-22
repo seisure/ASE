@@ -1,12 +1,11 @@
 package de.teambuktu.ase;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 class Condition extends TableEntry {
-    protected ArrayList<Rule> rules = new ArrayList<>();
 
     public Condition(int ruleCount) {
         for (int i = 0; i < ruleCount; i++) {
@@ -33,7 +32,9 @@ class Condition extends TableEntry {
             JSONObject json = new JSONObject(serialized);
             Condition condition = null;
             String title = null;
-            if (json.has("title")) title = json.getString("title");
+            if (json.has("title")) {
+                title = json.getString("title");
+            }
             if (json.has("rules")) {
                 JSONObject rulesJson = json.getJSONObject("rules");
                 condition = new Condition(rulesJson.length());
@@ -41,7 +42,8 @@ class Condition extends TableEntry {
                 for (int i = 0; i < rulesJson.length(); i++) {
                     condition.rules.add(new Rule());
                     Rule ruleImportDestination = condition.rules.get(i);
-                    String currentConditionValue = (String) ((JSONObject)rulesJson.get(Integer.toString(i))).get("ruleConditionValue");
+                    String currentConditionValue = (String) ((JSONObject)rulesJson
+                            .get(Integer.toString(i))).get("ruleConditionValue");
                     ruleImportDestination.setRuleConditionValue(currentConditionValue);
                 }
                 condition.setTitle(title);
@@ -59,7 +61,8 @@ class Condition extends TableEntry {
             JSONObject jsonObjectParent = new JSONObject();
             for (int i = 0; i < this.rules.size(); i++) {
                 JSONObject jsonObjectChild = new JSONObject();
-                jsonObjectChild.put("ruleConditionValue", this.rules.get(i).getRuleConditionValue());
+                jsonObjectChild.put("ruleConditionValue", this.rules.get(i)
+                        .getRuleConditionValue());
                 jsonObjectParent.put(Integer.toString(i), jsonObjectChild);
             }
             json.put("rules", jsonObjectParent);
