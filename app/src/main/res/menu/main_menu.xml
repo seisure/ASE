@@ -20,7 +20,7 @@
         android:title="@string/createInitialTable" />
     <item
         android:id="@+id/buttoCheckComplete"
-        android:title="Vollständigkeit prüfen" />
+        android:title="@string/validateCompleteness" />
     <item
         android:id="@+id/buttonImportCSV"
         android:title="@string/importCsv" />
