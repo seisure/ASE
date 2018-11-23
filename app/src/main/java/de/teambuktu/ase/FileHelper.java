@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class FileHelper {
-    static File exportToCSV(ArrayList<Condition> conditionList, ArrayList<Action> actionList) {
+    static File exportToCSV(ArrayList<Condition> conditionList, ArrayList<Action> actionList, String filename) {
         StringBuilder builder = new StringBuilder();
 
         for (Condition condition : conditionList) {
@@ -23,7 +23,7 @@ public class FileHelper {
             for (Rule rule : condition.rules) {
                 builder.append(rule.getRuleConditionValue()).append(';');
             }
-            builder.deleteCharAt(builder.length()-1);
+            builder.deleteCharAt(builder.length() - 1);
             builder.append('\n');
         }
 
@@ -34,20 +34,25 @@ public class FileHelper {
             for (Rule rule : action.rules) {
                 builder.append(rule.getRuleActionValue() ? 1 : 0).append(';');
             }
-            builder.deleteCharAt(builder.length()-1);
+            builder.deleteCharAt(builder.length() - 1);
             builder.append('\n');
         }
+
+        return buildFile(builder.toString(), filename);
+    }
+
+    public static File buildFile(String fileContent, String fileName) {
 
         try {
             File file;
             FileOutputStream outputStream;
-            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "ASE.csv");
+            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
             if (!file.exists()) {
                 file.createNewFile();
             }
 
             outputStream = new FileOutputStream(file);
-            outputStream.write(builder.toString().getBytes());
+            outputStream.write(fileContent.getBytes());
             outputStream.close();
             return file;
         } catch (IOException e) {
