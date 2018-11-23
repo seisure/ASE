@@ -28,7 +28,6 @@
     <string name="clearTableAskFor">Sollen alle Tabelleninhalte gelöscht werden?</string>
     <string name="clearTableSuccess">Tabelle wurde gelöscht</string>
     <string name="noSemicolons">\';\' ungültig</string>
-    <string name="validateCompleteness">Vollständigkeit prüfen</string>
     <string name="warningConsitency">Widerspruch erkannt</string>
     <string name="warningComplete">Bedingungen unvollständig</string>
 

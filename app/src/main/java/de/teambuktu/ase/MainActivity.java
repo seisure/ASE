@@ -412,12 +412,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.buttonImportCSV:
                 showImportDialog();
                 return true;
-            case R.id.buttoCheckComplete:
-                boolean testComplete = Utility.isListComplete(this.conditionList);
-                String message = testComplete ? "Tabelle ist vollständig" :
-                        "Tabelle ist unvollständig";
-                Toast.makeText(this.getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
