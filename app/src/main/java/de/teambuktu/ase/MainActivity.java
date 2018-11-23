@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -115,10 +116,7 @@ public class MainActivity extends AppCompatActivity {
                     fnOnClickActionRule(v, actionToAdd, ruleIndex);
                     List<Pair<Integer, Integer>> badRows = Utility
                             .testForConsistency(conditionList, actionList);
-                    for (Pair pair: badRows) {
-                        System.out.println("Wiederspruch mit Spalten: "
-                                + pair.first + " " + pair.second);
-                    }
+                    showBadRows(badRows);
                 }
             });
             row.addView(actionRule);
@@ -206,7 +204,13 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     fnOnClickConditionRule(v, conditionToAdd, ruleIndex);
                     boolean testComplete = Utility.isListComplete(conditionList);
-                    System.out.println(testComplete);
+                    if (!testComplete) {
+                        Toast.makeText(MainActivity.this, R.string.warningComplete,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    List<Pair<Integer, Integer>> badRows = Utility
+                            .testForConsistency(conditionList, actionList);
+                    showBadRows(badRows);
                 }
             });
             row.addView(conditionRule);
@@ -287,11 +291,37 @@ public class MainActivity extends AppCompatActivity {
 
     private void clearHeaderTable() {
         setTableVisible(R.id.tableHeader, false);
-        TextView columnText = new TextView(this);
         TableLayout table = findViewById(R.id.tableHeader);
         TableRow row = (TableRow) table.getChildAt(0);
         row.removeViews(2, row.getChildCount() - 2);
-        return;
+    }
+
+    private void showBadRows(List<Pair<Integer, Integer>> badRows) {
+        TableLayout conditionTable = findViewById(R.id.tableCondition);
+        TableLayout actionTable = findViewById(R.id.tableAction);
+        for (int i = 0; i < conditionTable.getChildCount(); i++) {
+            TableRow row = (TableRow) conditionTable.getChildAt(i);
+            for (int j = 2; j < row.getChildCount() - 1; j++) {
+                row.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
+            }
+            if (!badRows.isEmpty()) {
+                Toast.makeText(this, R.string.warningConsitency, Toast.LENGTH_SHORT).show();
+            }
+            for (int j = 0; j < badRows.size(); j++) {
+                row.getChildAt(badRows.get(j).first + 2).setBackgroundColor(getResources().getColor(R.color.colorRedMel));
+                row.getChildAt(badRows.get(j).second + 2).setBackgroundColor(getResources().getColor(R.color.colorRedMel));
+            }
+        }
+        for (int i = 0; i < actionTable.getChildCount(); i++) {
+            TableRow row = (TableRow) actionTable.getChildAt(i);
+            for (int j = 2; j < row.getChildCount() - 1; j++) {
+                row.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
+            }
+            for (int j = 0; j < badRows.size(); j++) {
+                row.getChildAt(badRows.get(j).first + 2).setBackgroundColor(getResources().getColor(R.color.colorRedMel));
+                row.getChildAt(badRows.get(j).second + 2).setBackgroundColor(getResources().getColor(R.color.colorRedMel));
+            }
+        }
     }
 
     @Override
@@ -311,6 +341,7 @@ public class MainActivity extends AppCompatActivity {
         for (Condition condition : conditions) {
             addRowToUI(condition);
         }
+        showBadRows(Utility.testForConsistency(conditionList, actionList));
 
         createHeaderColsRules();
 
@@ -347,12 +378,14 @@ public class MainActivity extends AppCompatActivity {
                 actionList.add(action);
                 storageHelper.update(actionList, conditionList);
                 addRowToUI(action);
+                showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonAddConditionRow:
                 Condition condition = new Condition(getRuleCount());
                 conditionList.add(condition);
                 storageHelper.update(actionList, conditionList);
                 addRowToUI(condition);
+                showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonAddRuleColumn:
                 if (!conditionList.isEmpty() || !actionList.isEmpty()) {
@@ -361,6 +394,7 @@ public class MainActivity extends AppCompatActivity {
                     addRuleColHeader(ruleCount);
                 }
                 storageHelper.update(actionList, conditionList);
+                showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonCreateInitialTable:
                 Intent initialIntent = new Intent(this, InitialActivity.class);
@@ -662,6 +696,7 @@ public class MainActivity extends AppCompatActivity {
             setTableVisible(R.id.tableHeader, false);
             clearHeaderTable();
         }
+        showBadRows(Utility.testForConsistency(conditionList, actionList));
         updateStorage(context);
     }
 
@@ -697,6 +732,7 @@ public class MainActivity extends AppCompatActivity {
             col = row.getChildAt(ruleToDelete + 2);
             row.removeView(col);
         }
+        showBadRows(Utility.testForConsistency(conditionList, actionList));
         updateStorage(context);
     }
 
