@@ -19,6 +19,9 @@
         android:icon="@android:drawable/ic_input_add"
         android:title="@string/createInitialTable" />
     <item
+        android:id="@+id/buttoCheckComplete"
+        android:title="@string/validateCompleteness" />
+    <item
         android:id="@+id/buttonImportCSV"
         android:title="@string/importCsv" />
     <item

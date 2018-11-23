@@ -21,7 +21,6 @@
     <string name="prefixConditionRow">B</string>
     <string name="prefixRuleCol">R</string>
 
-    <string name="ruleCount">Anzahl der Regeln anpassen</string>
     <string name="warning">Achtung!</string>
     <string name="warningForDelete">Durch die aktuelle Auswahl werden die letzten der folgende Einträge gelöscht:\n\n</string>
     <string name="continueWarning">\nFortfahren?</string>
@@ -29,6 +28,7 @@
     <string name="clearTableAskFor">Sollen alle Tabelleninhalte gelöscht werden?</string>
     <string name="clearTableSuccess">Tabelle wurde gelöscht</string>
     <string name="noSemicolons">\';\' ungültig</string>
+    <string name="validateCompleteness">Vollständigkeit prüfen</string>
 
     <string name="importCsv">Aus CSV importieren</string>
     <string name="importCsvAskFor">Durch das Importieren wird die bestehende Tabelle überschrieben. Fortfahren?</string>
