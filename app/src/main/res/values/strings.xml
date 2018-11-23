@@ -29,6 +29,8 @@
     <string name="clearTableSuccess">Tabelle wurde gelöscht</string>
     <string name="noSemicolons">\';\' ungültig</string>
     <string name="validateCompleteness">Vollständigkeit prüfen</string>
+    <string name="warningConsitency">Widerspruch erkannt</string>
+    <string name="warningComplete">Bedingungen unvollständig</string>
 
     <string name="importCsv">Aus CSV importieren</string>
     <string name="importCsvAskFor">Durch das Importieren wird die bestehende Tabelle überschrieben. Fortfahren?</string>
