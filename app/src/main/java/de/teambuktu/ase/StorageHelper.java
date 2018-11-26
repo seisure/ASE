@@ -1,24 +1,25 @@
 package de.teambuktu.ase;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
-
-import static android.content.Context.MODE_PRIVATE;
-
 class StorageHelper {
 
-    private final String SHAREDPREFERENCES = "DE.TEAMBUKTU.ASE";
-    private final String ACTIONS = "actions";
-    private final String CONDITIONS = "conditions";
+    private static final String SHAREDPREFERENCES = "DE.TEAMBUKTU.ASE";
+    private static final String ACTIONS = "actions";
+    private static final String CONDITIONS = "conditions";
 
     private SharedPreferences sharedPreferences;
+
     StorageHelper(Context context) {
-        this.sharedPreferences = context.getSharedPreferences(this.SHAREDPREFERENCES, MODE_PRIVATE);
+        this.sharedPreferences = context.getSharedPreferences(SHAREDPREFERENCES, MODE_PRIVATE);
     }
 
     void update(ArrayList<Action> actionList, ArrayList<Condition> conditionList) {
@@ -27,14 +28,14 @@ class StorageHelper {
         if (actionList != null) {
             JSONArray actionArray = new JSONArray();
             for (Action action : actionList) {
-                actionArray.put(action.toJSON());
+                actionArray.put(action.toJson());
             }
             sharedPreferences.edit().putString(ACTIONS, actionArray.toString()).apply();
         }
         if (conditionList != null) {
             JSONArray conditionArray = new JSONArray();
             for (Condition condition : conditionList) {
-                conditionArray.put(condition.toJSON());
+                conditionArray.put(condition.toJson());
             }
             sharedPreferences.edit().putString(CONDITIONS, conditionArray.toString()).apply();
         }
