@@ -48,6 +48,7 @@ public class Utility {
 
     private static List<RuleRow> createList(List<? extends TableEntry> originList) {
         List<RuleRow> returnList = new ArrayList<>();
+        if(originList.size() == 0) return returnList;
         for (int i = 0; i < originList.get(0).rules.size(); i++) {
             List<Rule> row = new ArrayList<>();
             for (TableEntry cond: originList) {
