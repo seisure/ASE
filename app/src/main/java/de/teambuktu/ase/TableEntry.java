@@ -18,7 +18,7 @@ abstract class TableEntry {
         this.title = title;
     }
 
-    public JSONObject toJSON()  {
+    public JSONObject toJson()  {
         try {
             JSONObject json = new JSONObject();
             json.put("hash", hashCode());

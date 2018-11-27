@@ -1,17 +1,18 @@
 package de.teambuktu.ase;
 
+import static de.teambuktu.ase.MainActivity.RESULT_IMPORT;
+
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import static de.teambuktu.ase.MainActivity.RESULT_IMPORT;
 
 public class InitialActivity extends AppCompatActivity implements View.OnClickListener {
     int conditionsIn;
@@ -70,6 +71,11 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * Called when the view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonCplus: {
@@ -167,6 +173,8 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
                 finish();
                 break;
             }
+            default:
+                break;
         }
     }
 
