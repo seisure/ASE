@@ -13,20 +13,29 @@ class Codegenerator {
 
             codeString.append("if (");
 
-            for (Condition condition : conditions) {
-                String conditionValue = condition.rules.get(i).getRuleConditionValue();
-                
+            for (int j = 0; j < conditions.size(); j++) {
+                Condition currentCondition = conditions.get(j);
+                String conditionValue = currentCondition.rules.get(i).getRuleConditionValue();
+
                 if (conditionValue.equals("J"))
                 {
-                    codeString.append(String.format("(%s) && ", condition.getTitle()));
+                    codeString.append(String.format("(%s)", currentCondition.getTitle()));
+                    if (j < (conditions.size() - 1)) {
+                        codeString.append(String.format(" && ", currentCondition.getTitle()));
+                    }
                 }
                 if (conditionValue.equals("N"))
                 {
-                    codeString.append(String.format("!(%s) && ", condition.getTitle()));
+                    codeString.append(String.format("!(%s)", currentCondition.getTitle()));
+                    if (j < (conditions.size() - 1)) {
+                        codeString.append(String.format(" && ", currentCondition.getTitle()));
+                    }
+                }
+                if (conditionValue.equals("-"))
+                {
+                    codeString.append(String.format("true", currentCondition.getTitle()));
                 }
             }
-
-            codeString.replace(codeString.length() - 4, codeString.length(), "");
 
             codeString.append(") { \n");
             
