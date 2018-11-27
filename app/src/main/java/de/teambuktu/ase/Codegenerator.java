@@ -6,24 +6,35 @@ class Codegenerator {
 
     String generateCode(ArrayList<Condition> conditions, ArrayList<Action> actions) {
         StringBuilder codeString = new StringBuilder();
-        int ruleCount = conditions.get(0).rules.size();
+        int ruleCount = Utility.getRuleCount(conditions, actions);
 
         for (int i = 0; i < ruleCount; i++) {
 
             codeString.append("if (");
 
-            for (Condition condition : conditions) {
-                String conditionValue = condition.rules.get(i).getRuleConditionValue();
+            for (int j = 0; j < conditions.size(); j++) {
+                Condition currentCondition = conditions.get(j);
+                String conditionValue = currentCondition.rules.get(i).getRuleConditionValue();
 
-                if (conditionValue.equals("J")) {
-                    codeString.append(String.format("(%s) && ", condition.getTitle()));
+                if (conditionValue.equals("J"))
+                {
+                    codeString.append(String.format("(%s)", currentCondition.getTitle()));
+                    if (j < (conditions.size() - 1)) {
+                        codeString.append(String.format(" && ", currentCondition.getTitle()));
+                    }
                 }
-                if (conditionValue.equals("N")) {
-                    codeString.append(String.format("!(%s) && ", condition.getTitle()));
+                if (conditionValue.equals("N"))
+                {
+                    codeString.append(String.format("!(%s)", currentCondition.getTitle()));
+                    if (j < (conditions.size() - 1)) {
+                        codeString.append(String.format(" && ", currentCondition.getTitle()));
+                    }
+                }
+                if (conditionValue.equals("-"))
+                {
+                    codeString.append(String.format("true", currentCondition.getTitle()));
                 }
             }
-
-            codeString.replace(codeString.length() - 4, codeString.length(), "");
 
             codeString.append(") { \n");
 
