@@ -348,19 +348,9 @@ public class MainActivity extends AppCompatActivity {
         if (this.actionList.size() == 0 && this.conditionList.size() == 0) {
             Intent initialIntent = new Intent(this, InitialActivity.class);
 
-            initialIntent.putExtra("rules", getRuleCount());
+            initialIntent.putExtra("rules", Utility.getRuleCount(conditionList, actionList));
             startActivityForResult(initialIntent, REQUEST_EDIT_TABLE);
         }
-    }
-
-    private int getRuleCount() {
-        int rules = 0;
-        if (!conditionList.isEmpty()) {
-            rules = conditionList.get(0).rules.size();
-        } else if (!actionList.isEmpty()) {
-            rules = actionList.get(0).rules.size();
-        }
-        return rules;
     }
 
     @Override
@@ -374,14 +364,14 @@ public class MainActivity extends AppCompatActivity {
         StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
         switch (item.getItemId()) {
             case R.id.buttonAddActionRow:
-                Action action = new Action(getRuleCount());
+                Action action = new Action(Utility.getRuleCount(conditionList, actionList));
                 actionList.add(action);
                 storageHelper.update(actionList, conditionList);
                 addRowToUI(action);
                 showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonAddConditionRow:
-                Condition condition = new Condition(getRuleCount());
+                Condition condition = new Condition(Utility.getRuleCount(conditionList, actionList));
                 conditionList.add(condition);
                 storageHelper.update(actionList, conditionList);
                 addRowToUI(condition);
@@ -389,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.buttonAddRuleColumn:
                 if (!conditionList.isEmpty() || !actionList.isEmpty()) {
-                    int ruleCount = getRuleCount();
+                    int ruleCount = Utility.getRuleCount(conditionList, actionList);
                     setNumberOfRules(ruleCount + 1);
                     addRuleColHeader(ruleCount);
                 }
@@ -400,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent initialIntent = new Intent(this, InitialActivity.class);
                 initialIntent.putExtra("conditions", conditionList.size());
                 initialIntent.putExtra("actions", actionList.size());
-                initialIntent.putExtra("rules", getRuleCount());
+                initialIntent.putExtra("rules", Utility.getRuleCount(conditionList, actionList));
                 startActivityForResult(initialIntent, REQUEST_EDIT_TABLE);
                 return true;
             case R.id.buttonClearTable:
@@ -777,12 +767,12 @@ public class MainActivity extends AppCompatActivity {
         boolean bIsConditionListFilled = this.conditionList.size() != 0;
         if (bIsConditionListFilled) {
             setTableVisible(R.id.tableHeader, true);
-            for(int i = 0; i < getRuleCount(); i++) {
+            for(int i = 0; i < Utility.getRuleCount(conditionList, actionList); i++) {
                 addRuleColHeader(i);
             }
         } else if (bIsActionListFilled) {
             setTableVisible(R.id.tableHeader, true);
-            for(int i = 0; i < getRuleCount(); i++) {
+            for(int i = 0; i < Utility.getRuleCount(conditionList, actionList); i++) {
                 addRuleColHeader(i);
             }
         }

@@ -7,7 +7,7 @@ class Codegenerator {
     String generateCode(ArrayList<Condition> conditions, ArrayList<Action> actions)
     {
         StringBuilder codeString = new StringBuilder();
-        int ruleCount = conditions.get(0).rules.size();
+        int ruleCount = Utility.getRuleCount(conditions, actions);
 
         for (int i = 0; i < ruleCount; i++) {
 

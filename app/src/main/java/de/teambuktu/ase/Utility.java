@@ -91,4 +91,14 @@ public class Utility {
 
         return referenzeRows;
     }
+
+    public static int getRuleCount(List<Condition> conditions, List<Action> actions) {
+        int rules = 0;
+        if (!conditions.isEmpty()) {
+            rules = conditions.get(0).rules.size();
+        } else if (!actions.isEmpty()) {
+            rules = actions.get(0).rules.size();
+        }
+        return rules;
+    }
 }
