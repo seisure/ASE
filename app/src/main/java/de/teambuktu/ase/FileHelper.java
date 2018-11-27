@@ -11,12 +11,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
-public class FileHelper {
-    static File exportToCSV(ArrayList<Condition> conditionList, ArrayList<Action> actionList, String filename) {
+class FileHelper {
+    static File exportToCsv(List<Condition> conditions, List<Action> actions, String filename) {
         StringBuilder builder = new StringBuilder();
 
-        for (Condition condition : conditionList) {
+        for (Condition condition : conditions) {
             builder.append('C').append(';');
             String title = condition.getTitle();
             builder.append(title == null ? "" : title).append(';');
@@ -27,7 +28,7 @@ public class FileHelper {
             builder.append('\n');
         }
 
-        for (Action action : actionList) {
+        for (Action action : actions) {
             builder.append('A').append(';');
             String title = action.getTitle();
             builder.append(title == null ? "" : title).append(';');
@@ -41,7 +42,14 @@ public class FileHelper {
         return buildFile(builder.toString(), filename);
     }
 
-    public static File buildFile(String fileContent, String fileName) {
+    /**
+     * Create a file with content.
+     *
+     * @param fileContent Serialized content to write
+     * @param fileName    the target-filename
+     */
+
+    static File buildFile(String fileContent, String fileName) {
 
         try {
             File file;
@@ -61,7 +69,7 @@ public class FileHelper {
         }
     }
 
-    static ArrayList<TableEntry> loadFromCSV(InputStream file) {
+    static ArrayList<TableEntry> loadFromCsv(InputStream file) {
         ArrayList<String> csv = readFromFile(file);
         int rules = csv.get(0).split(";").length - 2;
         if (rules < 0) {
@@ -86,8 +94,7 @@ public class FileHelper {
                     }
                 }
                 entries.add(newCondition);
-            }
-            else if (lineParts[0].equals("A")) {
+            } else if (lineParts[0].equals("A")) {
                 Action newAction = new Action(rules);
                 newAction.setTitle(lineParts[1]);
                 int j = 0;
@@ -114,8 +121,7 @@ public class FileHelper {
             while ((line = bufferedReader.readLine()) != null) {
                 ret.add(line);
             }
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             Log.e("login activity", "File not found: " + e.toString());
         } catch (IOException e) {
             Log.e("login activity", "Can not read file: " + e.toString());
