@@ -4,8 +4,7 @@ import java.util.ArrayList;
 
 class Codegenerator {
 
-    String generateCode(ArrayList<Condition> conditions, ArrayList<Action> actions)
-    {
+    String generateCode(ArrayList<Condition> conditions, ArrayList<Action> actions) {
         StringBuilder codeString = new StringBuilder();
         int ruleCount = Utility.getRuleCount(conditions, actions);
 
@@ -38,10 +37,10 @@ class Codegenerator {
             }
 
             codeString.append(") { \n");
-            
+
             for (Action action : actions) {
                 boolean actionValue = action.rules.get(i).getRuleActionValue();
-                
+
                 if (actionValue == true) {
                     codeString.append(String.format("%s();", action.getTitle()));
                     codeString.append("\n");

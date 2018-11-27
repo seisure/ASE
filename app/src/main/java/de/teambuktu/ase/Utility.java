@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Utility {
+class Utility {
 
     static boolean isListComplete(List<Condition> conditionList) {
         int condCounter = conditionList.size();
@@ -14,7 +14,7 @@ public class Utility {
 
         List<RuleRow> referenceRows = initializeList(condCounter);
         List<RuleRow> testRows = createList(conditionList);
-        for (RuleRow row: referenceRows) {
+        for (RuleRow row : referenceRows) {
             if (!testRows.contains(row)) {
                 return false;
             }
@@ -26,19 +26,19 @@ public class Utility {
     /*
         The first parameter has to be the conditions, the second has to be the actions.
      */
-    static List<Pair<Integer,Integer>> testForConsistency(List<? extends TableEntry> conditionList,
-                                                          List<? extends TableEntry> actionList) {
+    static List<Pair<Integer, Integer>> testForConsistency(List<? extends TableEntry> conditionList,
+                                                           List<? extends TableEntry> actionList) {
 
         List<RuleRow> conditionRows = createList(conditionList);
         List<RuleRow> actionRows = createList(actionList);
 
-        List<Pair<Integer,Integer>> badRows = new ArrayList<>();
+        List<Pair<Integer, Integer>> badRows = new ArrayList<>();
 
         for (int i = 0; i < conditionRows.size(); i++) {
             for (int k = i + 1; k < conditionRows.size(); k++) {
                 if (conditionRows.get(i).equals(conditionRows.get(k))) {
                     if (!(actionRows.get(i).equals(actionRows.get(k)))) {
-                        badRows.add(new Pair<>(i,k));
+                        badRows.add(new Pair<>(i, k));
                     }
                 }
             }
@@ -51,7 +51,7 @@ public class Utility {
         if(originList.size() == 0) return returnList;
         for (int i = 0; i < originList.get(0).rules.size(); i++) {
             List<Rule> row = new ArrayList<>();
-            for (TableEntry cond: originList) {
+            for (TableEntry cond : originList) {
                 row.add(cond.rules.get(i));
             }
             returnList.add(new RuleRow(row));
@@ -60,9 +60,9 @@ public class Utility {
     }
 
     private static List<RuleRow> initializeList(int conditions) {
-        List<RuleRow> referenzeRows  = new ArrayList<>();
+        List<RuleRow> referenzeRows = new ArrayList<>();
 
-        int powerOfCondition = (int)Math.pow(2,conditions);
+        int powerOfCondition = (int) Math.pow(2, conditions);
 
         Rule trueRule = new Rule();
         trueRule.setRuleConditionValue("J");

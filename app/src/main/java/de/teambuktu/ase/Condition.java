@@ -55,9 +55,9 @@ class Condition extends TableEntry {
         return null;
     }
 
-    public JSONObject toJSON() {
+    public JSONObject toJson() {
         try {
-            JSONObject json = super.toJSON();
+            JSONObject json = super.toJson();
             JSONObject jsonObjectParent = new JSONObject();
             for (int i = 0; i < this.rules.size(); i++) {
                 JSONObject jsonObjectChild = new JSONObject();
