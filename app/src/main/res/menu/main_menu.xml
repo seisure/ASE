@@ -3,6 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/symbolWarning"
+        android:icon="@drawable/warning"
+        app:showAsAction="always"
+        android:visible="false" />
+    <item
         android:id="@+id/buttonAddActionRow"
         android:title="@string/addActionRow"
         app:showAsAction="always" />

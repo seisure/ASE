@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private Menu menu;
     ArrayList<Action> actionList = new ArrayList<>();
     ArrayList<Condition> conditionList = new ArrayList<>();
     private static final int REQUEST_EDIT_TABLE = 0;
@@ -203,10 +204,21 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     fnOnClickConditionRule(v, conditionToAdd, ruleIndex);
-                    boolean testComplete = Utility.isListComplete(conditionList);
-                    if (!testComplete) {
-                        Toast.makeText(MainActivity.this, R.string.warningComplete,
-                                Toast.LENGTH_SHORT).show();
+                    List<RuleRow> testComplete = Utility.isListComplete(conditionList);
+                    if (!testComplete.isEmpty()) {
+
+                       /* for (RuleRow missingRow : testComplete) {
+
+                            String output = "";
+
+                            for (Rule rule : missingRow.row) {
+                                output += String.format("%s, ", rule.getRuleConditionValue());
+                            }
+                            System.out.println(output);
+                        }*/
+                        showWarningSymbol(true);
+                       /* Toast.makeText(MainActivity.this, R.string.warningComplete,
+                                Toast.LENGTH_SHORT).show();*/
                     }
                     List<Pair<Integer, Integer>> badRows = Utility
                             .testForConsistency(conditionList, actionList);
@@ -356,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -535,6 +548,11 @@ public class MainActivity extends AppCompatActivity {
         openFileIntent.setType("text/*");
         openFileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(openFileIntent, REQUEST_IMPORT_CSV);
+    }
+
+    private void showWarningSymbol(boolean show) {
+        MenuItem warningItem = menu.findItem(R.id.symbolWarning);
+        warningItem.setVisible(show);
     }
 
     @Override
