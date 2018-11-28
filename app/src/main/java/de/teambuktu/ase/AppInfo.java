@@ -21,6 +21,7 @@ public class AppInfo extends AppCompatActivity {
         }
 
         setTextViewLinkClickable(R.id.appInfoProjectLocation);
+        setCurrentVersionInfo();
     }
 
     @Override
@@ -37,5 +38,11 @@ public class AppInfo extends AppCompatActivity {
     public void setTextViewLinkClickable(int textviewId) {
         TextView textView = findViewById(textviewId);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    public void setCurrentVersionInfo() {
+        String versionCode = BuildConfig.VERSION_NAME;
+        TextView textView = findViewById(R.id.appInfoVersionNumber);
+        textView.setText("Version " + versionCode);
     }
 }
