@@ -53,4 +53,7 @@
 
     <string name="menuShowAppInfo">App-Info</string>
     <string name="AppInfoHeading">App-Info</string>
+    <string name="AppInfoAuthorsHeading">Autoren: </string>
+    <string name="AppInfoAuthorsNames">DHBW STG-TINF16D Gruppe B</string>
+    <string name="AppInfoProjectLocation"><a href="https://github.com/seisure/ASE">Projektseite</a></string>
 </resources>

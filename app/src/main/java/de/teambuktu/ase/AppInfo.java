@@ -3,7 +3,9 @@ package de.teambuktu.ase;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class AppInfo extends AppCompatActivity {
 
@@ -17,6 +19,8 @@ public class AppInfo extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.AppInfoHeading);
         }
+
+        setTextViewLinkClickable(R.id.appInfoProjectLocation);
     }
 
     @Override
@@ -28,5 +32,10 @@ public class AppInfo extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void setTextViewLinkClickable(int textviewId) {
+        TextView textView = findViewById(textviewId);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
