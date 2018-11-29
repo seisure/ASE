@@ -772,12 +772,12 @@ public class MainActivity extends AppCompatActivity {
         boolean isConditionListFilled = this.conditionList.size() != 0;
         if (isConditionListFilled) {
             setTableVisible(R.id.tableHeader, true);
-            for(int i = 0; i < Utility.getRuleCount(conditionList, actionList); i++) {
+            for (int i = 0; i < Utility.getRuleCount(conditionList, actionList); i++) {
                 addRuleColHeader(i);
             }
         } else if (isActionListFilled) {
             setTableVisible(R.id.tableHeader, true);
-            for(int i = 0; i < Utility.getRuleCount(conditionList, actionList); i++) {
+            for (int i = 0; i < Utility.getRuleCount(conditionList, actionList); i++) {
                 addRuleColHeader(i);
             }
         }
