@@ -8,9 +8,9 @@ import java.util.List;
 
 class Utility {
 
-    static List<RuleRow> isListComplete(List<Condition> conditionList) {
+    static Notification isListComplete(List<Condition> conditionList) {
         int condCounter = conditionList.size();
-
+        Notification notification = new Notification();
         List<RuleRow> suggestions = new ArrayList<>();
 
         List<RuleRow> referenceRows = initializeList(condCounter);
@@ -21,7 +21,9 @@ class Utility {
             }
         }
 
-        return suggestions;
+        notification.addSuggestions(suggestions);
+
+        return notification;
     }
 
     /*
