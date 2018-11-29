@@ -402,6 +402,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.buttonImportCSV:
                 showImportDialog();
                 return true;
+            case R.id.buttonShowAppInfo:
+                Intent appInfoIntent = new Intent(this, AppInfo.class);
+                startActivity(appInfoIntent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
