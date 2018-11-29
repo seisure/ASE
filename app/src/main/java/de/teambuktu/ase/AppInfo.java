@@ -17,7 +17,7 @@ public class AppInfo extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.AppInfoHeading);
+            actionBar.setTitle(R.string.appInfoHeading);
         }
 
         setTextViewLinkClickable(R.id.appInfoProjectLocation);
