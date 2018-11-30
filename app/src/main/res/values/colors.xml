@@ -5,4 +5,5 @@
     <color name="colorRedMel">#c48080</color>
     <color name="colorAccent">#4a4a48</color>
     <color name="colorBackgound">#f4f5fa</color>
+    <color name="colorAppInfoHyperlinkBlue">#4F98FF</color>
 </resources>
