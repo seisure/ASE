@@ -46,7 +46,12 @@ class StorageHelper {
 
         try {
             String actionsString = sharedPreferences.getString(ACTIONS, "");
-            JSONArray actionsJsonArray = new JSONArray(actionsString);
+            JSONArray actionsJsonArray;
+            if (actionsString.isEmpty()) {
+                actionsJsonArray = new JSONArray();
+            } else {
+                actionsJsonArray = new JSONArray(actionsString);
+            }
             for (int i = 0; i < actionsJsonArray.length(); i++) {
                 Action action = Action.fromString(actionsJsonArray.get(i).toString());
                 actionList.add(action);
@@ -65,7 +70,12 @@ class StorageHelper {
 
         try {
             String conditionsString = sharedPreferences.getString(CONDITIONS, "");
-            JSONArray conditionsJsonArray = new JSONArray(conditionsString);
+            JSONArray conditionsJsonArray;
+            if (conditionsString.isEmpty()) {
+                conditionsJsonArray = new JSONArray();
+            } else {
+                conditionsJsonArray = new JSONArray(conditionsString);
+            }
             for (int i = 0; i < conditionsJsonArray.length(); i++) {
                 Condition condition = Condition.fromString(conditionsJsonArray.get(i).toString());
                 conditionList.add(condition);
