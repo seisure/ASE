@@ -85,6 +85,5 @@
             android:onClick="onClickAppInfoHowTo"
             android:clickable="true"
             android:focusable="true" />
-
     </LinearLayout>
 </LinearLayout >
