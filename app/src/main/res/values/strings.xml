@@ -57,4 +57,9 @@
     <string name="appInfoAuthorsHeading">Autoren: </string>
     <string name="appInfoAuthorsNames">DHBW STG-TINF16D Gruppe B</string>
     <string name="appInfoProjectLocation"><a href="https://github.com/seisure/ASE">Projektseite</a></string>
+    <string name="appInfoHowTo"><u>How To</u></string>
+
+    <string name="howToTitle">How To</string>
+    <string name="howToText">Die App \"decise\" dient zum Erstellen und Bearbeiten von Entscheidungstabelle</string>
+    <string name="howToAccept">Verstanden</string>
 </resources>

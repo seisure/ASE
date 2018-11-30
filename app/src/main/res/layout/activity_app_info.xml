@@ -48,7 +48,7 @@
             android:text="@string/appInfoAuthorsHeading"
             android:textAppearance="@android:style/TextAppearance.Material.Headline"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -64,13 +64,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
-            android:paddingBottom="30dp"
             android:text="@string/appInfoProjectLocation"
             android:textAppearance="@android:style/TextAppearance.Material.Headline"
             android:textColor="@android:color/white"
             android:textColorLink="@color/colorAppInfoHyperlinkBlue"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/appInfoHowTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="30dp"
+            android:text="@string/appInfoHowTo"
+            android:textAppearance="@android:style/TextAppearance.Material.Headline"
+            android:textColor="@color/colorAppInfoHyperlinkBlue"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:onClick="onClickAppInfoHowTo"
+            android:clickable="true"
+            android:focusable="true" />
 
     </LinearLayout>
 </LinearLayout >
