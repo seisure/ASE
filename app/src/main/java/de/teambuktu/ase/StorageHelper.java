@@ -15,6 +15,7 @@ class StorageHelper {
     private static final String SHAREDPREFERENCES = "DE.TEAMBUKTU.ASE";
     private static final String ACTIONS = "actions";
     private static final String CONDITIONS = "conditions";
+    private static final String INITALSTARTUP = "initialStartup";
 
     private SharedPreferences sharedPreferences;
 
@@ -77,5 +78,14 @@ class StorageHelper {
         }
 
         return conditionList;
+    }
+
+    boolean getInitialStartup() {
+        return sharedPreferences.getBoolean(INITALSTARTUP, true);
+    }
+
+    void setInitialStartupFlag(boolean initialStartup) {
+        sharedPreferences.edit().remove(INITALSTARTUP).apply();
+        sharedPreferences.edit().putBoolean(INITALSTARTUP, initialStartup).apply();
     }
 }

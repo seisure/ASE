@@ -51,10 +51,13 @@
     <string name="share">Über welchen Weg möchtest Du exportieren?</string>
     <string name="warningNoFormat">Es wurde kein Dateiformat ausgewählt.</string>
 
-    <string name="menuShowAppInfo">App-Info</string>
     <string name="appInfoHeading">App-Info</string>
     <string name="appInfoLogoDescription">decise logo</string>
     <string name="appInfoAuthorsHeading">Autoren: </string>
     <string name="appInfoAuthorsNames">DHBW STG-TINF16D Gruppe B</string>
     <string name="appInfoProjectLocation"><a href="https://github.com/seisure/ASE">Projektseite</a></string>
+
+    <string name="howToTitle">How To</string>
+    <string name="howToText">Die Anwendung decise dient der Erstellung und Bearbeitung einer Entscheidungstabelle</string>
+    <string name="howToAccept">Verstanden</string>
 </resources>

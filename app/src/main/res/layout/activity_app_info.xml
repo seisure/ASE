@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:gravity="center"
-    tools:context=".AppInfo"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimaryDark"
+    tools:context=".AppInfo">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
         android:orientation="vertical"
-        android:gravity="center">
+        app:layout_constraintBottom_toTopOf="@+id/appInfoHowTo"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/appInfoAppName"
@@ -30,7 +31,7 @@
             android:id="@+id/appInfoVersionNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/darker_gray"/>
+            android:textColor="@android:color/darker_gray" />
 
         <ImageView
             android:id="@+id/deciseLogo"
@@ -48,7 +49,7 @@
             android:text="@string/appInfoAuthorsHeading"
             android:textAppearance="@android:style/TextAppearance.Material.Headline"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -64,7 +65,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
-            android:paddingBottom="30dp"
             android:text="@string/appInfoProjectLocation"
             android:textAppearance="@android:style/TextAppearance.Material.Headline"
             android:textColor="@android:color/white"
@@ -73,4 +73,19 @@
             android:textStyle="bold" />
 
     </LinearLayout>
-</LinearLayout >
+
+    <Button
+        android:id="@+id/appInfoHowTo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@android:color/white"
+        android:onClick="onClickAppInfoHowTo"
+        android:text="@string/howToTitle"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</android.support.constraint.ConstraintLayout>
