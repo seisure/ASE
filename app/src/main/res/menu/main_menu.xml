@@ -37,5 +37,5 @@
         android:title="@string/clearTable" />
     <item
         android:id="@+id/buttonShowAppInfo"
-        android:title="@string/menuShowAppInfo" />
+        android:title="@string/appInfoHeading" />
 </menu>

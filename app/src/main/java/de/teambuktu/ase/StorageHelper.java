@@ -15,6 +15,7 @@ class StorageHelper {
     private static final String SHAREDPREFERENCES = "DE.TEAMBUKTU.ASE";
     private static final String ACTIONS = "actions";
     private static final String CONDITIONS = "conditions";
+    private static final String INITALSTARTUP = "initialStartup";
 
     private SharedPreferences sharedPreferences;
 
@@ -46,7 +47,12 @@ class StorageHelper {
 
         try {
             String actionsString = sharedPreferences.getString(ACTIONS, "");
-            JSONArray actionsJsonArray = new JSONArray(actionsString);
+            JSONArray actionsJsonArray;
+            if (actionsString.isEmpty()) {
+                actionsJsonArray = new JSONArray();
+            } else {
+                actionsJsonArray = new JSONArray(actionsString);
+            }
             for (int i = 0; i < actionsJsonArray.length(); i++) {
                 Action action = Action.fromString(actionsJsonArray.get(i).toString());
                 actionList.add(action);
@@ -65,7 +71,12 @@ class StorageHelper {
 
         try {
             String conditionsString = sharedPreferences.getString(CONDITIONS, "");
-            JSONArray conditionsJsonArray = new JSONArray(conditionsString);
+            JSONArray conditionsJsonArray;
+            if (conditionsString.isEmpty()) {
+                conditionsJsonArray = new JSONArray();
+            } else {
+                conditionsJsonArray = new JSONArray(conditionsString);
+            }
             for (int i = 0; i < conditionsJsonArray.length(); i++) {
                 Condition condition = Condition.fromString(conditionsJsonArray.get(i).toString());
                 conditionList.add(condition);
@@ -77,5 +88,14 @@ class StorageHelper {
         }
 
         return conditionList;
+    }
+
+    boolean getInitialStartup() {
+        return sharedPreferences.getBoolean(INITALSTARTUP, true);
+    }
+
+    void setInitialStartupFlag(boolean initialStartup) {
+        sharedPreferences.edit().remove(INITALSTARTUP).apply();
+        sharedPreferences.edit().putBoolean(INITALSTARTUP, initialStartup).apply();
     }
 }

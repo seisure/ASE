@@ -334,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
+
         ArrayList<Action> actions = storageHelper.loadActions();
         this.actionList = actions;
         for (Action action : actions) {
@@ -349,12 +350,7 @@ public class MainActivity extends AppCompatActivity {
 
         createHeaderColsRules();
 
-        if (this.actionList.size() == 0 && this.conditionList.size() == 0) {
-            Intent initialIntent = new Intent(this, InitialActivity.class);
-
-            initialIntent.putExtra("rules", Utility.getRuleCount(conditionList, actionList));
-            startActivityForResult(initialIntent, REQUEST_EDIT_TABLE);
-        }
+        handleShowHowTo();
     }
 
     @Override
@@ -818,6 +814,27 @@ public class MainActivity extends AppCompatActivity {
         return Integer.toString(i).length();
     }
 
+    public void getHowToAlertDialog() {
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.howToTitle);
+            builder.setMessage(R.string.howToText);
+            final Context context = this.getApplicationContext();
+
+            builder.setPositiveButton(R.string.howToAccept, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    StorageHelper storageHelper = new StorageHelper(context);
+                    storageHelper.setInitialStartupFlag(false);
+                    handleMoveToInitialActivity(actionList, conditionList);
+                }
+            });
+            builder.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setNumberOfRules(int count) {
         clearUiTable();
 
@@ -847,5 +864,24 @@ public class MainActivity extends AppCompatActivity {
         //if (toDelete.exists())
         //    toDelete.delete();
         super.onDestroy();
+    }
+
+    private void handleShowHowTo() {
+        StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
+        boolean isInitialStartup = storageHelper.getInitialStartup();
+        if (isInitialStartup) {
+            getHowToAlertDialog();
+        } else {
+            handleMoveToInitialActivity(this.actionList, this.conditionList);
+        }
+    }
+
+    private void handleMoveToInitialActivity(List<Action> actionList, List<Condition> conditionList) {
+        if (actionList.size() == 0 && conditionList.size() == 0) {
+            Intent initialIntent = new Intent(this, InitialActivity.class);
+
+            initialIntent.putExtra("rules", Utility.getRuleCount(conditionList, actionList));
+            startActivityForResult(initialIntent, REQUEST_EDIT_TABLE);
+        }
     }
 }
