@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/symbolWarning"
-        android:icon="@drawable/warning"
+        android:icon="@android:drawable/stat_sys_warning"
         app:showAsAction="always"
         android:visible="false" />
     <item

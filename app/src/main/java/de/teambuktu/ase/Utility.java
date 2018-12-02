@@ -21,7 +21,8 @@ class Utility {
             }
         }
 
-        notification.addSuggestions(suggestions);
+        notification.addSuggestions(suggestions, condCounter,
+                conditionList.get(0).rules.size());
 
         return notification;
     }
