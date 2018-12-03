@@ -37,8 +37,10 @@ class Utility {
         for (int i = 0; i < conditionRows.size(); i++) {
             for (int k = i + 1; k < conditionRows.size(); k++) {
                 if (conditionRows.get(i).equals(conditionRows.get(k))) {
-                    if (!(actionRows.get(i).equals(actionRows.get(k)))) {
-                        badRows.add(new Pair<>(i, k));
+                    if (!actionList.isEmpty()) {
+                        if (!(actionRows.get(i).equals(actionRows.get(k)))) {
+                            badRows.add(new Pair<>(i, k));
+                        }
                     }
                 }
             }
