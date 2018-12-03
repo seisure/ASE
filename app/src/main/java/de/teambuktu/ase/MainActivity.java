@@ -345,12 +345,25 @@ public class MainActivity extends AppCompatActivity {
 
         createHeaderColsRules();
 
-        if (this.actionList.size() == 0 && this.conditionList.size() == 0) {
+        if (this.actionList.isEmpty() && this.conditionList.isEmpty()
+                || isInitialTable()) {
             Intent initialIntent = new Intent(this, InitialActivity.class);
 
-            initialIntent.putExtra("rules", getRuleCount());
+            Condition initialCondition = new Condition(1);
+            Action initialAction = new Action(1);
+            conditionList.add(initialCondition);
+            actionList.add(initialAction);
+            addRowToUi(initialCondition);
+            addRowToUi(initialAction);
+            updateStorage(getApplicationContext());
+
+            initialIntent.putExtra("conditions", 1);
+            initialIntent.putExtra("actions", 1);
+            initialIntent.putExtra("rules", 1);
             startActivityForResult(initialIntent, REQUEST_EDIT_TABLE);
         }
+
+        handleDeleteButtonColor();
     }
 
     private int getRuleCount() {
@@ -378,6 +391,7 @@ public class MainActivity extends AppCompatActivity {
                 actionList.add(action);
                 storageHelper.update(actionList, conditionList);
                 addRowToUi(action);
+                handleDeleteButtonColor();
                 showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonAddConditionRow:
@@ -385,6 +399,7 @@ public class MainActivity extends AppCompatActivity {
                 conditionList.add(condition);
                 storageHelper.update(actionList, conditionList);
                 addRowToUi(condition);
+                handleDeleteButtonColor();
                 showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonAddRuleColumn:
@@ -394,6 +409,7 @@ public class MainActivity extends AppCompatActivity {
                     addRuleColHeader(ruleCount);
                 }
                 storageHelper.update(actionList, conditionList);
+                handleDeleteButtonColor();
                 showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonCreateInitialTable:
@@ -405,6 +421,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.buttonClearTable:
                 clearTableDialog();
+                handleDeleteButtonColor();
                 return true;
             case R.id.buttonExport:
                 showExportDialog();
@@ -547,6 +564,39 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(openFileIntent, REQUEST_IMPORT_CSV);
     }
 
+    private void handleDeleteButtonColor() {
+        setDeleteButtonColor(actionList.size(), R.id.tableAction);
+        setDeleteButtonColor(conditionList.size(), R.id.tableCondition);
+        setDeleteButtonColor(getRuleCount(), R.id.tableHeader);
+    }
+
+    private void setDeleteButtonColor(int listSize, int tableId) {
+        TableLayout table = findViewById(tableId);
+        TableRow row = (TableRow) table.getChildAt(0);
+        ImageButton deleteButton;
+        if (tableId == R.id.tableHeader) {
+            LinearLayout linearLayout = (LinearLayout) row.getChildAt(2);
+            deleteButton = (ImageButton) linearLayout.getChildAt(0);
+        } else {
+            deleteButton = (ImageButton) row.getChildAt(row.getChildCount() - 1);
+        }
+        if (listSize <= 1) {
+            deleteButton.setColorFilter(Color.GRAY);
+        } else {
+            deleteButton.clearColorFilter();
+        }
+    }
+
+    private boolean isInitialTable() {
+        if (this.actionList.size() == 1 && this.conditionList.size() == 1
+                && this.actionList.get(0).rules.size() == 1
+                && this.conditionList.get(0).rules.size() == 1
+                && this.actionList.get(0).isEmpty() && this.conditionList.get(0).isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
@@ -591,6 +641,7 @@ public class MainActivity extends AppCompatActivity {
 
                     clearHeaderTable();
                     createHeaderColsRules();
+                    handleDeleteButtonColor();
 
                     updateStorage(getApplicationContext());
                 } else if (resultCode == RESULT_IMPORT) {
@@ -633,6 +684,7 @@ public class MainActivity extends AppCompatActivity {
 
                         clearHeaderTable();
                         createHeaderColsRules();
+                        handleDeleteButtonColor();
 
                         updateStorage(getApplicationContext());
                         Toast.makeText(context, R.string.validCSV, Toast.LENGTH_LONG).show();
@@ -674,65 +726,67 @@ public class MainActivity extends AppCompatActivity {
         updateStorage(getApplicationContext());
     }
 
-    private void fnOnClickButtonDeleteRow(Object list, View v, Context context, TableRow row) {
-        ImageButton button = (ImageButton) v;
-        boolean isActionListEmpty = true;
-        boolean isConditionListEmpty = true;
-        if (((ArrayList<?>) list).get(0) instanceof Action) {
-            actionList.remove(button.getTag());
-            removeFromTableLayout(row, R.id.tableAction);
-            isActionListEmpty = actionList.size() == 0;
-            isConditionListEmpty = conditionList.size() == 0;
-            updateUiRowNumbers(R.id.tableAction, getString(R.string.prefixActionRow));
-        } else if (((ArrayList<?>) list).get(0) instanceof Condition) {
-            conditionList.remove(button.getTag());
-            removeFromTableLayout(row, R.id.tableCondition);
-            isConditionListEmpty = conditionList.size() == 0;
-            isActionListEmpty = actionList.size() == 0;
-            updateUiRowNumbers(R.id.tableCondition, getString(R.string.prefixConditionRow));
+    private void fnOnClickButtonDeleteRow(List list, View buttonDelete, Context context, TableRow rowUI) {
+        if (list.size() > 1) {
+            ImageButton button = (ImageButton) buttonDelete;
+            boolean isActionListEmpty = actionList.isEmpty();
+            boolean isConditionListEmpty = conditionList.isEmpty();
+            if (((ArrayList<?>) list).get(0) instanceof Action) {
+                actionList.remove(button.getTag());
+                removeFromTableLayout(rowUI, R.id.tableAction);
+                updateUiRowNumbers(R.id.tableAction, getString(R.string.prefixActionRow));
+            } else if (((ArrayList<?>) list).get(0) instanceof Condition) {
+                conditionList.remove(button.getTag());
+                removeFromTableLayout(rowUI, R.id.tableCondition);
+                updateUiRowNumbers(R.id.tableCondition, getString(R.string.prefixConditionRow));
+            }
+            boolean isTableEmpty = isActionListEmpty && isConditionListEmpty;
+            if (isTableEmpty) {
+                setTableVisible(R.id.tableHeader, false);
+                clearHeaderTable();
+            }
+            showBadRows(Utility.testForConsistency(conditionList, actionList));
+            updateStorage(context);
+            handleDeleteButtonColor();
         }
-        boolean isTableEmpty = isActionListEmpty && isConditionListEmpty;
-        if (isTableEmpty) {
-            setTableVisible(R.id.tableHeader, false);
-            clearHeaderTable();
-        }
-        showBadRows(Utility.testForConsistency(conditionList, actionList));
-        updateStorage(context);
     }
 
     private void fnOnClickButtonDeleteCol(View v, Context context) {
-        ImageButton button = (ImageButton) v;
-        int ruleToDelete = getRuleIndexInRow(button);
+        if (getRuleCount() > 1) {
+            ImageButton button = (ImageButton) v;
+            int ruleToDelete = getRuleIndexInRow(button);
 
-        for (Action action : actionList) {
-            action.rules.remove(ruleToDelete);
-        }
-        for (Condition condition : conditionList) {
-            condition.rules.remove(ruleToDelete);
-        }
+            for (Action action : actionList) {
+                action.rules.remove(ruleToDelete);
+            }
+            for (Condition condition : conditionList) {
+                condition.rules.remove(ruleToDelete);
+            }
 
-        TableLayout headerTable = findViewById(R.id.tableHeader);
-        TableRow row = (TableRow) headerTable.getChildAt(0);
-        View col = row.getChildAt(ruleToDelete + 2);
-        row.removeView(col);
-        updateUiColNumbers();
-
-        TableLayout conditionsTable = findViewById(R.id.tableCondition);
-        int rowCount = conditionsTable.getChildCount();
-        for (int i = 0; i < rowCount; i++) {
-            row = (TableRow) conditionsTable.getChildAt(i);
-            col = row.getChildAt(ruleToDelete + 2);
+            TableLayout headerTable = findViewById(R.id.tableHeader);
+            TableRow row = (TableRow) headerTable.getChildAt(0);
+            View col = row.getChildAt(ruleToDelete + 2);
             row.removeView(col);
+            updateUiColNumbers();
+
+            TableLayout conditionsTable = findViewById(R.id.tableCondition);
+            int rowCount = conditionsTable.getChildCount();
+            for (int i = 0; i < rowCount; i++) {
+                row = (TableRow) conditionsTable.getChildAt(i);
+                col = row.getChildAt(ruleToDelete + 2);
+                row.removeView(col);
+            }
+            TableLayout actionsTable = findViewById(R.id.tableAction);
+            rowCount = actionsTable.getChildCount();
+            for (int i = 0; i < rowCount; i++) {
+                row = (TableRow) actionsTable.getChildAt(i);
+                col = row.getChildAt(ruleToDelete + 2);
+                row.removeView(col);
+            }
+            showBadRows(Utility.testForConsistency(conditionList, actionList));
+            updateStorage(context);
+            handleDeleteButtonColor();
         }
-        TableLayout actionsTable = findViewById(R.id.tableAction);
-        rowCount = actionsTable.getChildCount();
-        for (int i = 0; i < rowCount; i++) {
-            row = (TableRow) actionsTable.getChildAt(i);
-            col = row.getChildAt(ruleToDelete + 2);
-            row.removeView(col);
-        }
-        showBadRows(Utility.testForConsistency(conditionList, actionList));
-        updateStorage(context);
     }
 
     private void clearUiTable() {
@@ -747,6 +801,16 @@ public class MainActivity extends AppCompatActivity {
         clearHeaderTable();
         conditionList.clear();
         actionList.clear();
+
+        Condition initialCondition = new Condition(1);
+        Action initialAction = new Action(1);
+        conditionList.add(initialCondition);
+        actionList.add(initialAction);
+        addRowToUi(initialCondition);
+        addRowToUi(initialAction);
+        addRuleColHeader(1);
+        handleDeleteButtonColor();
+
         updateStorage(context);
         Toast.makeText(MainActivity.this, R.string.clearTableSuccess, Toast.LENGTH_SHORT).show();
     }
