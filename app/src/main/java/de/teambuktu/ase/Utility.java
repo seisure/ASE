@@ -37,8 +37,10 @@ class Utility {
         for (int i = 0; i < conditionRows.size(); i++) {
             for (int k = i + 1; k < conditionRows.size(); k++) {
                 if (conditionRows.get(i).equals(conditionRows.get(k))) {
-                    if (!(actionRows.get(i).equals(actionRows.get(k)))) {
-                        badRows.add(new Pair<>(i, k));
+                    if (!actionList.isEmpty()) {
+                        if (!(actionRows.get(i).equals(actionRows.get(k)))) {
+                            badRows.add(new Pair<>(i, k));
+                        }
                     }
                 }
             }
@@ -48,7 +50,9 @@ class Utility {
 
     private static List<RuleRow> createList(List<? extends TableEntry> originList) {
         List<RuleRow> returnList = new ArrayList<>();
-        if(originList.size() == 0) return returnList;
+        if (originList.size() == 0) {
+            return returnList;
+        }
         for (int i = 0; i < originList.get(0).rules.size(); i++) {
             List<Rule> row = new ArrayList<>();
             for (TableEntry cond : originList) {
@@ -90,5 +94,15 @@ class Utility {
         }
 
         return referenzeRows;
+    }
+
+    public static int getRuleCount(List<Condition> conditions, List<Action> actions) {
+        int rules = 0;
+        if (!conditions.isEmpty()) {
+            rules = conditions.get(0).rules.size();
+        } else if (!actions.isEmpty()) {
+            rules = actions.get(0).rules.size();
+        }
+        return rules;
     }
 }

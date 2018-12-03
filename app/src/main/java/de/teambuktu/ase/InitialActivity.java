@@ -105,11 +105,11 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.buttonCreate: {
                 Intent intent = new Intent(this, InitialActivity.class);
                 EditText editText = findViewById(R.id.editTextConditionsToAdd);
-                int conditionsOut = Integer.parseInt(editText.getText().toString());
+                int conditionsOut = editText.getText().toString().isEmpty() ? 1 : Integer.parseInt(editText.getText().toString());
                 editText = findViewById(R.id.editTextActionsToAdd);
-                int actionsOut = Integer.parseInt(editText.getText().toString());
+                int actionsOut = editText.getText().toString().isEmpty() ? 1 : Integer.parseInt(editText.getText().toString());
                 editText = findViewById(R.id.editTextRulesToAdd);
-                int rulesOut = Integer.parseInt(editText.getText().toString());
+                int rulesOut = editText.getText().toString().isEmpty() ? 1 : Integer.parseInt(editText.getText().toString());
 
                 if (conditionsOut < conditionsIn || actionsOut < actionsIn || rulesOut < rulesIn) {
 

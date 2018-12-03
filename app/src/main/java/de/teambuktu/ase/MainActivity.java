@@ -330,6 +330,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
+
         ArrayList<Action> actions = storageHelper.loadActions();
         this.actionList = actions;
         for (Action action : actions) {
@@ -364,6 +365,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         handleDeleteButtonColor();
+        handleShowHowTo();
     }
 
     private int getRuleCount() {
@@ -387,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
         StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
         switch (item.getItemId()) {
             case R.id.buttonAddActionRow:
-                Action action = new Action(getRuleCount());
+                Action action = new Action(Utility.getRuleCount(conditionList, actionList));
                 actionList.add(action);
                 storageHelper.update(actionList, conditionList);
                 addRowToUi(action);
@@ -395,7 +397,7 @@ public class MainActivity extends AppCompatActivity {
                 showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonAddConditionRow:
-                Condition condition = new Condition(getRuleCount());
+                Condition condition = new Condition(Utility.getRuleCount(conditionList, actionList));
                 conditionList.add(condition);
                 storageHelper.update(actionList, conditionList);
                 addRowToUi(condition);
@@ -404,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.buttonAddRuleColumn:
                 if (!conditionList.isEmpty() || !actionList.isEmpty()) {
-                    int ruleCount = getRuleCount();
+                    int ruleCount = Utility.getRuleCount(conditionList, actionList);
                     setNumberOfRules(ruleCount + 1);
                     addRuleColHeader(ruleCount);
                 }
@@ -416,7 +418,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent initialIntent = new Intent(this, InitialActivity.class);
                 initialIntent.putExtra("conditions", conditionList.size());
                 initialIntent.putExtra("actions", actionList.size());
-                initialIntent.putExtra("rules", getRuleCount());
+                initialIntent.putExtra("rules", Utility.getRuleCount(conditionList, actionList));
                 startActivityForResult(initialIntent, REQUEST_EDIT_TABLE);
                 return true;
             case R.id.buttonClearTable:
@@ -428,6 +430,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.buttonImportCSV:
                 showImportDialog();
+                return true;
+            case R.id.buttonShowAppInfo:
+                Intent appInfoIntent = new Intent(this, AppInfo.class);
+                startActivity(appInfoIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -846,12 +852,12 @@ public class MainActivity extends AppCompatActivity {
         boolean isConditionListFilled = this.conditionList.size() != 0;
         if (isConditionListFilled) {
             setTableVisible(R.id.tableHeader, true);
-            for (int i = 0; i < getRuleCount(); i++) {
+            for (int i = 0; i < Utility.getRuleCount(conditionList, actionList); i++) {
                 addRuleColHeader(i);
             }
         } else if (isActionListFilled) {
             setTableVisible(R.id.tableHeader, true);
-            for (int i = 0; i < getRuleCount(); i++) {
+            for (int i = 0; i < Utility.getRuleCount(conditionList, actionList); i++) {
                 addRuleColHeader(i);
             }
         }
@@ -872,6 +878,27 @@ public class MainActivity extends AppCompatActivity {
 
     private int getNumberLength(int i) {
         return Integer.toString(i).length();
+    }
+
+    public void getHowToAlertDialog() {
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.howToTitle);
+            builder.setMessage(R.string.howToText);
+            final Context context = this.getApplicationContext();
+
+            builder.setPositiveButton(R.string.howToAccept, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    StorageHelper storageHelper = new StorageHelper(context);
+                    storageHelper.setInitialStartupFlag(false);
+                    handleMoveToInitialActivity(actionList, conditionList);
+                }
+            });
+            builder.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setNumberOfRules(int count) {
@@ -903,5 +930,24 @@ public class MainActivity extends AppCompatActivity {
         //if (toDelete.exists())
         //    toDelete.delete();
         super.onDestroy();
+    }
+
+    private void handleShowHowTo() {
+        StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
+        boolean isInitialStartup = storageHelper.getInitialStartup();
+        if (isInitialStartup) {
+            getHowToAlertDialog();
+        } else {
+            handleMoveToInitialActivity(this.actionList, this.conditionList);
+        }
+    }
+
+    private void handleMoveToInitialActivity(List<Action> actionList, List<Condition> conditionList) {
+        if (actionList.size() == 0 && conditionList.size() == 0) {
+            Intent initialIntent = new Intent(this, InitialActivity.class);
+
+            initialIntent.putExtra("rules", Utility.getRuleCount(conditionList, actionList));
+            startActivityForResult(initialIntent, REQUEST_EDIT_TABLE);
+        }
     }
 }
