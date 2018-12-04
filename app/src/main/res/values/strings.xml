@@ -55,9 +55,11 @@
     <string name="share">Über welchen Weg möchtest Du exportieren?</string>
     <string name="warningNoFormat">Es wurde kein Dateiformat ausgewählt.</string>
 
-    <string name="warningDialogTitle">Bedingungen unvollständig</string>
+    <string name="warningDialogTitle">Regeln fehlen zur Vollständigkeit</string>
     <string name="warningDialogMessage">Folgende Regelkombinationen werden für die
         Vollständigkeit benötigt:</string>
+    <string name="warningDialogToManyRulesMessage">Reduziere die Anzahl an fehlenden Regeln,
+        damit wir dir Vorschläge zur Vollständigkeit anzeigen können.</string>
 
     <string name="menuShowAppInfo">App-Info</string>
 

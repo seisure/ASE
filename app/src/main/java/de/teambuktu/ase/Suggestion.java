@@ -14,6 +14,10 @@ public class Suggestion {
         this.rules = rules;
     }
 
+    int getSuggestionSize() {
+        return this.completenessSuggestions.size();
+    }
+
     private String generateTemplate() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("%-6s", " "));
@@ -54,8 +58,13 @@ public class Suggestion {
 
     @Override
     public String toString() {
-        String template = generateTemplate();
+        String suggestions = "";
 
-        return fillTemplate(template);
+        if (getSuggestionSize() < 10) {
+            String template = generateTemplate();
+            suggestions = fillTemplate(template);
+        }
+
+        return suggestions;
     }
 }

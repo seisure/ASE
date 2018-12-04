@@ -29,8 +29,16 @@ public class Notification {
 
     public Dialog createWarningDialog(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.warningDialogTitle);
-        builder.setMessage(R.string.warningDialogMessage);
+        builder.setTitle(String.format("%d %s", suggestion.getSuggestionSize(),
+                context.getResources().getString(R.string.warningDialogTitle)));
+
+        if (suggestion.getSuggestionSize() < 10) {
+            builder.setMessage(R.string.warningDialogMessage);
+        } else {
+            builder.setMessage(context.getResources().
+                    getString(R.string.warningDialogToManyRulesMessage));
+        }
+
         TextView textView = new TextView(context);
         textView.setText(suggestion.toString());
         textView.setGravity(Gravity.CENTER);
