@@ -39,6 +39,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.teambuktu.ase.FileHelper.sharedFolderPath;
+
 public class MainActivity extends AppCompatActivity {
     private Menu menu;
     private Notification testCompleteNotification;
@@ -48,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_EXPORT_CSV = 1;
     private static final int REQUEST_IMPORT_CSV = 2;
     public static final int RESULT_IMPORT = 2;
+    public static final int REQUEST_SHARE = 4;
+
+    private File tempSharedFile;
 
     private Toast consistencyToast = null;
 
@@ -497,6 +502,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -509,12 +515,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void showShareActivity(File fileToShare) {
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            tempSharedFile = fileToShare;
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("text/csv");
+            shareIntent.setType("text/*");
             Uri fileUri = FileProvider.getUriForFile(this, "com.myfileprovider", fileToShare);
             shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-            this.startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
+            this.startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.share)), REQUEST_SHARE);
         }
     }
 
@@ -653,6 +660,10 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(context, R.string.validCSV, Toast.LENGTH_LONG).show();
                     }
                 }
+                break;
+            case REQUEST_SHARE:
+                tempSharedFile.delete();
+                (new File(sharedFolderPath)).delete();
                 break;
             default:
                 break;

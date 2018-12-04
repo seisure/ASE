@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 class FileHelper {
+    public static final String sharedFolderPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS.concat("/").concat("deciseSharedFiles_" + new Object().hashCode())).toString();
+
     static File exportToCsv(List<Condition> conditions, List<Action> actions, String filename) {
         StringBuilder builder = new StringBuilder();
 
@@ -54,7 +56,8 @@ class FileHelper {
         try {
             File file;
             FileOutputStream outputStream;
-            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
+            new File(sharedFolderPath).mkdirs();
+            file = new File(sharedFolderPath, fileName);
             if (!file.exists()) {
                 file.createNewFile();
             }
