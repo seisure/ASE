@@ -20,18 +20,18 @@ public class Suggestion {
 
     private String generateTemplate() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%-6s", " "));
+        sb.append("    ");
 
         for (int i = 0; i < completenessSuggestions.size(); i++) {
-            sb.append(String.format("R%d ", this.rules + (i + 1)));
+            sb.append(String.format("R%d\t", this.rules + (i + 1)));
         }
 
         sb.append("\n");
 
         for (int k = 0; k < this.conditions; k++) {
-            sb.append(String.format("B%d ", k));
+            sb.append(String.format("B%d\t", k));
             for (int i = 0; i < this.completenessSuggestions.size(); i++) {
-                sb.append(String.format("$%d%d ", k, i));
+                sb.append(String.format("$%d%d\t", k, i));
             }
             sb.append("\n");
         }
@@ -46,7 +46,7 @@ public class Suggestion {
         for (RuleRow missingRow: completenessSuggestions) {
             for (Rule rule : missingRow.row) {
                 String placeholder = String.format("$%d%d", k++, i);
-                retVal = retVal.replace(placeholder, String.format("%-4s",
+                retVal = retVal.replace(placeholder, String.format("%s\t",
                         rule.getRuleConditionValue()));
             }
             k = 0;
