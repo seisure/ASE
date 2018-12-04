@@ -2,6 +2,7 @@ package de.teambuktu.ase;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -51,19 +52,8 @@ public class AppInfo extends AppCompatActivity {
     }
 
     public void onClickAppInfoHowTo(View v) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.howToTitle);
-        builder.setMessage(R.string.howToText);
-        final Context context = this.getApplicationContext();
-
-        builder.setPositiveButton(R.string.howToAccept, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                StorageHelper storageHelper = new StorageHelper(context);
-                storageHelper.setInitialStartupFlag(false);
-            }
-        });
-
-        builder.show();
+        Intent howToIntent = new Intent(this, HowToActivity.class);
+        howToIntent.putExtra("isInitial", true);
+        startActivity(howToIntent);
     }
 }

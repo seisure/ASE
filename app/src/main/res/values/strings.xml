@@ -2,6 +2,7 @@
     <string name="app_name">decise</string>
     <string name="dialog_yes">Ja</string>
     <string name="dialog_no">Nein</string>
+    <string name="dialog_ok">Ok</string>
     <string name="table">Auftragsannahme</string>
     <string name="create">Übernehmen</string>
     <string name="cancel">Abbrechen</string>
@@ -22,19 +23,23 @@
     <string name="prefixRuleCol">R</string>
 
     <string name="warning">Achtung!</string>
-    <string name="warningForDelete">Durch die aktuelle Auswahl werden die letzten der folgende Einträge gelöscht:\n\n</string>
+    <string name="warningForDelete">Durch die aktuelle Auswahl werden die
+        letzten der folgende Einträge gelöscht:\n\n</string>
     <string name="continueWarning">\nFortfahren?</string>
     <string name="clearTable">Alles löschen</string>
     <string name="clearTableAskFor">Sollen alle Tabelleninhalte gelöscht werden?</string>
     <string name="clearTableSuccess">Tabelle wurde gelöscht</string>
     <string name="noSemicolons">\';\' ungültig</string>
     <string name="warningConsitency">Widerspruch erkannt</string>
+    <string name="validConsistency">Widerspruch gelöst</string>>
     <string name="warningComplete">Bedingungen unvollständig</string>
 
     <string name="importCsv">Aus CSV importieren</string>
-    <string name="importCsvAskFor">Durch das Importieren wird die bestehende Tabelle überschrieben. Fortfahren?</string>
+    <string name="importCsvAskFor">Durch das Importieren wird die bestehende
+        Tabelle überschrieben. Fortfahren?</string>
     <string name="validCSV">Erfolgreich importiert</string>
-    <string name="invalidCSV">Die CSV-Datei ist ungültig und wurde deshalb nicht importiert.</string>
+    <string name="invalidCSV">Die CSV-Datei ist ungültig und wurde deshalb
+        nicht importiert.</string>
 
     <string name="export">Exportieren</string>
     <string name="exportAskFor">Was möchtest Du exportieren?</string>
@@ -51,13 +56,27 @@
     <string name="share">Über welchen Weg möchtest Du exportieren?</string>
     <string name="warningNoFormat">Es wurde kein Dateiformat ausgewählt.</string>
 
+    <string name="warningDialogTitle">Regeln fehlen zur Vollständigkeit</string>
+    <string name="warningDialogMessage">Folgende Regelkombinationen werden für die
+        Vollständigkeit benötigt:</string>
+    <string name="warningDialogToManyRulesMessage">Reduziere die Anzahl an fehlenden Regeln,
+        damit wir dir Vorschläge zur Vollständigkeit anzeigen können.</string>
+
+    <string name="menuShowAppInfo">App-Info</string>
+
     <string name="appInfoHeading">App-Info</string>
     <string name="appInfoLogoDescription">decise logo</string>
     <string name="appInfoAuthorsHeading">Autoren: </string>
     <string name="appInfoAuthorsNames">DHBW STG-TINF16D Gruppe B</string>
-    <string name="appInfoProjectLocation"><a href="https://github.com/seisure/ASE">Projektseite</a></string>
+    <string name="appInfoProjectLocation">
+        <a href="https://github.com/seisure/ASE">Projektseite</a>
+    </string>
 
     <string name="howToTitle">How To</string>
-    <string name="howToText">Die Anwendung decise dient der Erstellung und Bearbeitung einer Entscheidungstabelle</string>
-    <string name="howToAccept">Verstanden</string>
+    <string name="howToText">Die Anwendung decise dient der Erstellung und Bearbeitung einer Entscheidungstabelle.</string>
+    <string name="howToAccept">Lass uns starten</string>
+    <string name="howToPlusA">Klicke auf +A, um eine neue Aktion zur Entscheidungstabelle hinzuzufügen.</string>
+    <string name="howToPlusB">Klicke auf +B, um eine neue Bedingung zur Entscheidungstabelle hinzuzufügen.</string>
+    <string name="howToPlusR">Klicke auf +R, um eine neue Regel zur Entscheidungstabelle hinzuzufügen.</string>
+    <string name="howToTableInfo">Wir haben dir für den Anfang schon mal eine Tabelle angelegt.</string>
 </resources>

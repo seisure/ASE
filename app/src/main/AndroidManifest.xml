@@ -66,6 +66,7 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
+        <activity android:name=".HowToActivity"></activity>
     </application>
 
 </manifest>
