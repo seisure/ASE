@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_IMPORT_CSV = 2;
     public static final int RESULT_IMPORT = 2;
 
+    private Toast consistencyToast = null;
+
     private void addRowToUi(final Action actionToAdd) {
         setTableVisible(R.id.tableHeader, true);
 
@@ -305,7 +307,11 @@ public class MainActivity extends AppCompatActivity {
                 row.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
             }
             if (!badRows.isEmpty()) {
-                Toast.makeText(this, R.string.warningConsitency, Toast.LENGTH_SHORT).show();
+                consistencyToast.setText(R.string.warningConsitency);
+                consistencyToast.show();
+            } else {
+                consistencyToast.setText(R.string.validConsistency);
+                consistencyToast.show();
             }
             for (int j = 0; j < badRows.size(); j++) {
                 row.getChildAt(badRows.get(j).first + 2).setBackgroundColor(getResources().getColor(R.color.colorRedMel));
@@ -331,6 +337,7 @@ public class MainActivity extends AppCompatActivity {
 
         StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
 
+        consistencyToast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
         ArrayList<Action> actions = storageHelper.loadActions();
         this.actionList = actions;
         for (Action action : actions) {
