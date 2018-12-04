@@ -16,22 +16,19 @@ class Codegenerator {
                 Condition currentCondition = conditions.get(j);
                 String conditionValue = currentCondition.rules.get(i).getRuleConditionValue();
 
-                if (conditionValue.equals("J"))
-                {
+                if (conditionValue.equals("J")) {
                     codeString.append(String.format("(%s)", currentCondition.getTitle()));
                     if (j < (conditions.size() - 1)) {
                         codeString.append(String.format(" && ", currentCondition.getTitle()));
                     }
                 }
-                if (conditionValue.equals("N"))
-                {
+                if (conditionValue.equals("N")) {
                     codeString.append(String.format("!(%s)", currentCondition.getTitle()));
                     if (j < (conditions.size() - 1)) {
                         codeString.append(String.format(" && ", currentCondition.getTitle()));
                     }
                 }
-                if (conditionValue.equals("-"))
-                {
+                if (conditionValue.equals("-")) {
                     codeString.append(String.format("true", currentCondition.getTitle()));
                 }
             }
