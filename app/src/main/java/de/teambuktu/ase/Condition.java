@@ -1,9 +1,9 @@
 package de.teambuktu.ase;
 
-import java.util.ArrayList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 class Condition extends TableEntry {
 
@@ -42,7 +42,7 @@ class Condition extends TableEntry {
                 for (int i = 0; i < rulesJson.length(); i++) {
                     condition.rules.add(new Rule());
                     Rule ruleImportDestination = condition.rules.get(i);
-                    String currentConditionValue = (String) ((JSONObject)rulesJson
+                    String currentConditionValue = (String) ((JSONObject) rulesJson
                             .get(Integer.toString(i))).get("ruleConditionValue");
                     ruleImportDestination.setRuleConditionValue(currentConditionValue);
                 }
@@ -72,5 +72,12 @@ class Condition extends TableEntry {
         }
 
         return null;
+    }
+
+    public boolean isEmpty() {
+        if ((getTitle() == null || getTitle().equals("")) && rules.get(0).getRuleConditionValue().equals("-")) {
+            return true;
+        }
+        return false;
     }
 }

@@ -31,9 +31,9 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         Intent intent = this.getIntent();
-        conditionsIn = intent.getIntExtra("conditions", 0);
-        actionsIn = intent.getIntExtra("actions", 0);
-        rulesIn = intent.getIntExtra("rules", 0);
+        conditionsIn = intent.getIntExtra("conditions", 1);
+        actionsIn = intent.getIntExtra("actions", 1);
+        rulesIn = intent.getIntExtra("rules", 1);
         EditText conditionsText = findViewById(R.id.editTextConditionsToAdd);
         EditText actionsText = findViewById(R.id.editTextActionsToAdd);
         EditText rulesText = findViewById(R.id.editTextRulesToAdd);
@@ -66,7 +66,7 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         int num = Integer.parseInt(editText.getText().toString());
         if (plus) {
             editText.setText(String.valueOf(num + 1));
-        } else if (!plus && num > 0) {
+        } else if (!plus && num > 1) {
             editText.setText(String.valueOf(num - 1));
         }
     }

@@ -1,9 +1,9 @@
 package de.teambuktu.ase;
 
-import java.util.ArrayList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 class Action extends TableEntry {
@@ -13,19 +13,6 @@ class Action extends TableEntry {
         for (int i = 0; i < ruleCount; i++) {
             rules.add(new Rule());
             rules.get(i).setRuleActionValue(false);
-        }
-    }
-
-    protected void setNumberOfRules(int count) {
-        if (count > rules.size()) {
-            for (int i = rules.size(); i <= count - 1; i++) {
-                rules.add(new Rule());
-                rules.get(i).setRuleActionValue(false);
-            }
-        } else if (count < rules.size()) {
-            for (int i = rules.size() - 1; i >= count; i--) {
-                rules.remove(i);
-            }
         }
     }
 
@@ -44,7 +31,7 @@ class Action extends TableEntry {
                 for (int i = 0; i < rulesJson.length(); i++) {
                     action.rules.add(new Rule());
                     Rule ruleImportDestination = action.rules.get(i);
-                    Boolean currentActionValue = (Boolean) ((JSONObject)rulesJson
+                    Boolean currentActionValue = (Boolean) ((JSONObject) rulesJson
                             .get(Integer.toString(i))).get("ruleActionValue");
                     ruleImportDestination.setRuleActionValue(currentActionValue);
                 }
@@ -55,6 +42,19 @@ class Action extends TableEntry {
             e.printStackTrace();
         }
         return null;
+    }
+
+    protected void setNumberOfRules(int count) {
+        if (count > rules.size()) {
+            for (int i = rules.size(); i <= count - 1; i++) {
+                rules.add(new Rule());
+                rules.get(i).setRuleActionValue(false);
+            }
+        } else if (count < rules.size()) {
+            for (int i = rules.size() - 1; i >= count; i--) {
+                rules.remove(i);
+            }
+        }
     }
 
     public JSONObject toJson() {
@@ -73,5 +73,12 @@ class Action extends TableEntry {
         }
 
         return null;
+    }
+
+    public boolean isEmpty() {
+        if ((getTitle() == null || getTitle() == "") && !rules.get(0).getRuleActionValue()) {
+            return true;
+        }
+        return false;
     }
 }

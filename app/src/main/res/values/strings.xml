@@ -26,9 +26,9 @@
     <string name="warningForDelete">Durch die aktuelle Auswahl werden die
         letzten der folgende Einträge gelöscht:\n\n</string>
     <string name="continueWarning">\nFortfahren?</string>
-    <string name="clearTable">Alles löschen</string>
+    <string name="clearTable">Tabelle zurücksetzen</string>
     <string name="clearTableAskFor">Sollen alle Tabelleninhalte gelöscht werden?</string>
-    <string name="clearTableSuccess">Tabelle wurde gelöscht</string>
+    <string name="clearTableSuccess">Tabelle wurde zurückgesetzt</string>
     <string name="noSemicolons">\';\' ungültig</string>
     <string name="warningConsitency">Widerspruch erkannt</string>
     <string name="validConsistency">Widerspruch gelöst</string>>
