@@ -8,19 +8,26 @@ import java.util.List;
 
 class Utility {
 
-    static boolean isListComplete(List<Condition> conditionList) {
+    static Notification isListComplete(List<Condition> conditionList) {
         int condCounter = conditionList.size();
-
+        Notification notification = new Notification();
+        List<RuleRow> suggestions = new ArrayList<>();
 
         List<RuleRow> referenceRows = initializeList(condCounter);
         List<RuleRow> testRows = createList(conditionList);
         for (RuleRow row : referenceRows) {
             if (!testRows.contains(row)) {
-                return false;
+                suggestions.add(row);
             }
         }
 
-        return true;
+
+        if (!conditionList.isEmpty()) {
+            notification.addSuggestions(suggestions, condCounter,
+                    conditionList.get(0).rules.size());
+        }
+
+        return notification;
     }
 
     /*

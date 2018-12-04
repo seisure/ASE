@@ -2,6 +2,7 @@ package de.teambuktu.ase;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,12 +40,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private Menu menu;
+    private Notification testCompleteNotification;
     ArrayList<Action> actionList = new ArrayList<>();
     ArrayList<Condition> conditionList = new ArrayList<>();
     private static final int REQUEST_EDIT_TABLE = 0;
     private static final int REQUEST_EXPORT_CSV = 1;
     private static final int REQUEST_IMPORT_CSV = 2;
     public static final int RESULT_IMPORT = 2;
+
+    private Toast consistencyToast = null;
 
     private void addRowToUi(final Action actionToAdd) {
         setTableVisible(R.id.tableHeader, true);
@@ -203,11 +208,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     fnOnClickConditionRule(v, conditionToAdd, ruleIndex);
-                    boolean testComplete = Utility.isListComplete(conditionList);
-                    if (!testComplete) {
-                        Toast.makeText(MainActivity.this, R.string.warningComplete,
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    checkCompleteness();
                     List<Pair<Integer, Integer>> badRows = Utility
                             .testForConsistency(conditionList, actionList);
                     showBadRows(badRows);
@@ -230,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fnOnClickButtonDeleteRow(conditionList, v, context, row);
+                checkCompleteness();
             }
         });
     }
@@ -255,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fnOnClickButtonDeleteCol(v, context);
+                checkCompleteness();
             }
         });
         linearLayout.addView(buttonDelete);
@@ -296,6 +299,11 @@ public class MainActivity extends AppCompatActivity {
         row.removeViews(2, row.getChildCount() - 2);
     }
 
+    private void checkCompleteness() {
+        testCompleteNotification = Utility.isListComplete(this.conditionList);
+        showWarningSymbol(!testCompleteNotification.isEmpty());
+    }
+
     private void showBadRows(List<Pair<Integer, Integer>> badRows) {
         TableLayout conditionTable = findViewById(R.id.tableCondition);
         TableLayout actionTable = findViewById(R.id.tableAction);
@@ -305,7 +313,11 @@ public class MainActivity extends AppCompatActivity {
                 row.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
             }
             if (!badRows.isEmpty()) {
-                Toast.makeText(this, R.string.warningConsitency, Toast.LENGTH_SHORT).show();
+                consistencyToast.setText(R.string.warningConsitency);
+                consistencyToast.show();
+            } else {
+                consistencyToast.setText(R.string.validConsistency);
+                consistencyToast.show();
             }
             for (int j = 0; j < badRows.size(); j++) {
                 row.getChildAt(badRows.get(j).first + 2).setBackgroundColor(getResources().getColor(R.color.colorRedMel));
@@ -331,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
 
         StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
 
+        consistencyToast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
         ArrayList<Action> actions = storageHelper.loadActions();
         this.actionList = actions;
         for (Action action : actions) {
@@ -381,6 +394,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -388,6 +402,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
         switch (item.getItemId()) {
+            case R.id.symbolWarning:
+                Dialog dialog = testCompleteNotification.createWarningDialog(this);
+                dialog.show();
+                return true;
             case R.id.buttonAddActionRow:
                 Action action = new Action(Utility.getRuleCount(conditionList, actionList));
                 actionList.add(action);
@@ -402,6 +420,8 @@ public class MainActivity extends AppCompatActivity {
                 storageHelper.update(actionList, conditionList);
                 addRowToUi(condition);
                 handleDeleteButtonColor();
+
+                checkCompleteness();
                 showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonAddRuleColumn:
@@ -412,6 +432,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 storageHelper.update(actionList, conditionList);
                 handleDeleteButtonColor();
+                checkCompleteness();
                 showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonCreateInitialTable:
@@ -601,6 +622,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
+
+    private void showWarningSymbol(boolean show) {
+        MenuItem warningItem = menu.findItem(R.id.symbolWarning);
+        warningItem.setVisible(show);
     }
 
     @Override
@@ -936,7 +961,10 @@ public class MainActivity extends AppCompatActivity {
         StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
         boolean isInitialStartup = storageHelper.getInitialStartup();
         if (isInitialStartup) {
-            getHowToAlertDialog();
+            Intent howToIntent = new Intent(this, HowToActivity.class);
+            howToIntent.putExtra("isInitial", false);
+            startActivity(howToIntent);
+            storageHelper.setInitialStartupFlag(false);
         } else {
             handleMoveToInitialActivity(this.actionList, this.conditionList);
         }
