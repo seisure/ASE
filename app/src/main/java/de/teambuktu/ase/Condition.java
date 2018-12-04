@@ -73,4 +73,11 @@ class Condition extends TableEntry {
 
         return null;
     }
+
+    public boolean isEmpty () {
+        if ((getTitle() == null || getTitle().equals("") ) && rules.get(0).getRuleConditionValue().equals("-")) {
+            return true;
+        }
+        return false;
+    }
 }

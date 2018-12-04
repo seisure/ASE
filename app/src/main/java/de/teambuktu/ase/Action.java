@@ -74,4 +74,11 @@ class Action extends TableEntry {
 
         return null;
     }
+
+    public boolean isEmpty () {
+        if ((getTitle() == null || getTitle() == "" ) && !rules.get(0).getRuleActionValue()) {
+            return true;
+        }
+        return false;
+    }
 }
