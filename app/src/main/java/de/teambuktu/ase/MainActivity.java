@@ -2,6 +2,7 @@ package de.teambuktu.ase;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private Menu menu;
+    private Notification testCompleteNotification;
     ArrayList<Action> actionList = new ArrayList<>();
     ArrayList<Condition> conditionList = new ArrayList<>();
     private static final int REQUEST_EDIT_TABLE = 0;
@@ -205,11 +208,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     fnOnClickConditionRule(v, conditionToAdd, ruleIndex);
-                    boolean testComplete = Utility.isListComplete(conditionList);
-                    if (!testComplete) {
-                        Toast.makeText(MainActivity.this, R.string.warningComplete,
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    checkCompleteness();
                     List<Pair<Integer, Integer>> badRows = Utility
                             .testForConsistency(conditionList, actionList);
                     showBadRows(badRows);
@@ -232,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fnOnClickButtonDeleteRow(conditionList, v, context, row);
+                checkCompleteness();
             }
         });
     }
@@ -257,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fnOnClickButtonDeleteCol(v, context);
+                checkCompleteness();
             }
         });
         linearLayout.addView(buttonDelete);
@@ -296,6 +297,11 @@ public class MainActivity extends AppCompatActivity {
         TableLayout table = findViewById(R.id.tableHeader);
         TableRow row = (TableRow) table.getChildAt(0);
         row.removeViews(2, row.getChildCount() - 2);
+    }
+
+    private void checkCompleteness() {
+        testCompleteNotification = Utility.isListComplete(this.conditionList);
+        showWarningSymbol(!testCompleteNotification.isEmpty());
     }
 
     private void showBadRows(List<Pair<Integer, Integer>> badRows) {
@@ -359,6 +365,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -366,6 +373,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
         switch (item.getItemId()) {
+            case R.id.symbolWarning:
+                Dialog dialog = testCompleteNotification.createWarningDialog(this);
+                dialog.show();
+                return true;
             case R.id.buttonAddActionRow:
                 Action action = new Action(Utility.getRuleCount(conditionList, actionList));
                 actionList.add(action);
@@ -378,6 +389,7 @@ public class MainActivity extends AppCompatActivity {
                 conditionList.add(condition);
                 storageHelper.update(actionList, conditionList);
                 addRowToUi(condition);
+                checkCompleteness();
                 showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonAddRuleColumn:
@@ -387,6 +399,7 @@ public class MainActivity extends AppCompatActivity {
                     addRuleColHeader(ruleCount);
                 }
                 storageHelper.update(actionList, conditionList);
+                checkCompleteness();
                 showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonCreateInitialTable:
@@ -542,6 +555,11 @@ public class MainActivity extends AppCompatActivity {
         openFileIntent.setType("text/*");
         openFileIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(openFileIntent, REQUEST_IMPORT_CSV);
+    }
+
+    private void showWarningSymbol(boolean show) {
+        MenuItem warningItem = menu.findItem(R.id.symbolWarning);
+        warningItem.setVisible(show);
     }
 
     @Override
