@@ -21,8 +21,11 @@ class Utility {
             }
         }
 
-        notification.addSuggestions(suggestions, condCounter,
-                conditionList.get(0).rules.size());
+
+        if (!conditionList.isEmpty()) {
+            notification.addSuggestions(suggestions, condCounter,
+                    conditionList.get(0).rules.size());
+        }
 
         return notification;
     }
