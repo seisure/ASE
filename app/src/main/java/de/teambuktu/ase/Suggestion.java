@@ -40,10 +40,11 @@ public class Suggestion {
     }
 
     private String fillTemplate(String template) {
-        int k = 0, i = 0;
+        int k = 0;
+        int i = 0;
         String retVal = template;
 
-        for (RuleRow missingRow: completenessSuggestions) {
+        for (RuleRow missingRow : completenessSuggestions) {
             for (Rule rule : missingRow.row) {
                 String placeholder = String.format("$%d%d", k++, i);
                 retVal = retVal.replace(placeholder, String.format("%s\t",

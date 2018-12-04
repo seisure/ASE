@@ -35,8 +35,8 @@ public class Notification {
         if (suggestion.getSuggestionSize() < 10) {
             builder.setMessage(R.string.warningDialogMessage);
         } else {
-            builder.setMessage(context.getResources().
-                    getString(R.string.warningDialogToManyRulesMessage));
+            builder.setMessage(context.getResources()
+                    .getString(R.string.warningDialogToManyRulesMessage));
         }
 
         TextView textView = new TextView(context);
@@ -44,7 +44,7 @@ public class Notification {
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(20);
         builder.setView(textView);
-        builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener(){
+        builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
             }
