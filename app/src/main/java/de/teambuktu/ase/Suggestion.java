@@ -14,40 +14,38 @@ public class Suggestion {
         this.rules = rules;
     }
 
-    private String preBuildTable() {
-        int ruleCount = completenessSuggestions.get(0).row.size();
+    private String generateTemplate() {
         StringBuilder sb = new StringBuilder();
-        sb.append("<table><th></th>");
+        sb.append(String.format("%-6s", " "));
 
-        for (int x = 0; x < ruleCount; x++) {
-            sb.append(String.format("<th>R%d</th>", rules + (x + 1)));
+        for (int i = 0; i < completenessSuggestions.size(); i++) {
+            sb.append(String.format("R%d ", this.rules + (i + 1)));
         }
 
-        for (int k = 0; k < conditions; k++) {
-            sb.append(String.format("<tr><td>B%d: </td>", k));
-            for (int i = 0; i < ruleCount; i++) {
-                sb.append(String.format("<td>$%d%d</td>", k, i));
+        sb.append("\n");
+
+        for (int k = 0; k < this.conditions; k++) {
+            sb.append(String.format("B%d ", k));
+            for (int i = 0; i < this.completenessSuggestions.size(); i++) {
+                sb.append(String.format("$%d%d ", k, i));
             }
-            sb.append("</tr>");
+            sb.append("\n");
         }
-
-        sb.append("</table>");
 
         return sb.toString();
     }
 
-    private String addTableData(String template) {
-
-        int k = 0, i;
+    private String fillTemplate(String template) {
+        int k = 0, i = 0;
         String retVal = template;
 
         for (RuleRow missingRow: completenessSuggestions) {
-            i = 0;
             for (Rule rule : missingRow.row) {
-                String placeholder = String.format("$%d%d", k, i++);
-                retVal = retVal.replace(placeholder, rule.getRuleConditionValue());
+                String placeholder = String.format("$%d%d", k++, i);
+                retVal = retVal.replace(placeholder, String.format("%-4s", rule.getRuleConditionValue()));
             }
-            k++;
+            k = 0;
+            i++;
         }
 
         return retVal;
@@ -55,8 +53,8 @@ public class Suggestion {
 
     @Override
     public String toString() {
-        String template = preBuildTable();
+        String template = generateTemplate();
 
-        return addTableData(template);
+        return fillTemplate(template);
     }
 }
