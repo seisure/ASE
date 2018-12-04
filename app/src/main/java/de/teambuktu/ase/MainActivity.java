@@ -206,12 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     fnOnClickConditionRule(v, conditionToAdd, ruleIndex);
-                    testCompleteNotification = Utility.isListComplete(conditionList);
-                    if (!testCompleteNotification.isEmpty()) {
-                        showWarningSymbol(true);
-                    } else {
-                        showWarningSymbol(false);
-                    }
+                    checkCompleteness();
                     List<Pair<Integer, Integer>> badRows = Utility
                             .testForConsistency(conditionList, actionList);
                     showBadRows(badRows);
@@ -234,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fnOnClickButtonDeleteRow(conditionList, v, context, row);
+                checkCompleteness();
             }
         });
     }
@@ -259,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 fnOnClickButtonDeleteCol(v, context);
+                checkCompleteness();
             }
         });
         linearLayout.addView(buttonDelete);
@@ -298,6 +295,11 @@ public class MainActivity extends AppCompatActivity {
         TableLayout table = findViewById(R.id.tableHeader);
         TableRow row = (TableRow) table.getChildAt(0);
         row.removeViews(2, row.getChildCount() - 2);
+    }
+
+    private void checkCompleteness() {
+        testCompleteNotification = Utility.isListComplete(this.conditionList);
+        showWarningSymbol(!testCompleteNotification.isEmpty());
     }
 
     private void showBadRows(List<Pair<Integer, Integer>> badRows) {
@@ -380,6 +382,7 @@ public class MainActivity extends AppCompatActivity {
                 conditionList.add(condition);
                 storageHelper.update(actionList, conditionList);
                 addRowToUi(condition);
+                checkCompleteness();
                 showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonAddRuleColumn:
@@ -389,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
                     addRuleColHeader(ruleCount);
                 }
                 storageHelper.update(actionList, conditionList);
+                checkCompleteness();
                 showBadRows(Utility.testForConsistency(conditionList, actionList));
                 return true;
             case R.id.buttonCreateInitialTable:

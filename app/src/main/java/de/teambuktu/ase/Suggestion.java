@@ -42,7 +42,8 @@ public class Suggestion {
         for (RuleRow missingRow: completenessSuggestions) {
             for (Rule rule : missingRow.row) {
                 String placeholder = String.format("$%d%d", k++, i);
-                retVal = retVal.replace(placeholder, String.format("%-4s", rule.getRuleConditionValue()));
+                retVal = retVal.replace(placeholder, String.format("%-4s",
+                        rule.getRuleConditionValue()));
             }
             k = 0;
             i++;
