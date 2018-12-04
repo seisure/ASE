@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class HowToActivity extends AppCompatActivity {
 
@@ -22,7 +23,9 @@ public class HowToActivity extends AppCompatActivity {
                 actionBar.setTitle(R.string.howToTitle);
             }
             Button button = findViewById(R.id.buttonFinishAndStart);
+            TextView textView = findViewById(R.id.textViewTableInfo);
             button.setVisibility(View.GONE);
+            textView.setVisibility(View.GONE);
         }
     }
 

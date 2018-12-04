@@ -29,8 +29,7 @@
     <item
         android:id="@+id/buttonExport"
         android:icon="?attr/actionModeShareDrawable"
-        android:title="@string/export"
-        app:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
+        android:title="@string/export" />
     <item
         android:id="@+id/buttonClearTable"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
