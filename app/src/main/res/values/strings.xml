@@ -68,7 +68,6 @@
     <string name="appInfoProjectLocation">
         <a href="https://github.com/seisure/ASE">Projektseite</a>
     </string>
-    <string name="appInfoProjectLocation"><a href="https://github.com/seisure/ASE">Projektseite</a></string>
 
     <string name="howToTitle">How To</string>
     <string name="howToText">Die Anwendung decise dient der Erstellung und Bearbeitung einer Entscheidungstabelle</string>
