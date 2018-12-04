@@ -856,7 +856,10 @@ public class MainActivity extends AppCompatActivity {
         StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
         boolean isInitialStartup = storageHelper.getInitialStartup();
         if (isInitialStartup) {
-            getHowToAlertDialog();
+            Intent howToIntent = new Intent(this, HowToActivity.class);
+            howToIntent.putExtra("isInitial", false);
+            startActivity(howToIntent);
+            storageHelper.setInitialStartupFlag(false);
         } else {
             handleMoveToInitialActivity(this.actionList, this.conditionList);
         }

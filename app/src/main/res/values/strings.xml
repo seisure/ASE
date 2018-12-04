@@ -58,6 +58,10 @@
     <string name="appInfoProjectLocation"><a href="https://github.com/seisure/ASE">Projektseite</a></string>
 
     <string name="howToTitle">How To</string>
-    <string name="howToText">Die Anwendung decise dient der Erstellung und Bearbeitung einer Entscheidungstabelle</string>
-    <string name="howToAccept">Verstanden</string>
+    <string name="howToText">Die Anwendung decise dient der Erstellung und Bearbeitung einer Entscheidungstabelle.</string>
+    <string name="howToAccept">Lass uns starten</string>
+    <string name="howToPlusA">Klicke auf +A, um eine neue Aktion zur Entscheidungstabelle hinzuzufügen.</string>
+    <string name="howToPlusB">Klicke auf +B, um eine neue Bedingung zur Entscheidungstabelle hinzuzufügen.</string>
+    <string name="howToPlusR">Klicke auf +R, um eine neue Regel zur Entscheidungstabelle hinzuzufügen.</string>
+    <string name="howToTableInfo">Wir haben dir für den Anfang schon mal eine Tabelle angelegt.</string>
 </resources>
