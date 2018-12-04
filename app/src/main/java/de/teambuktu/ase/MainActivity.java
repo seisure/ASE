@@ -357,12 +357,7 @@ public class MainActivity extends AppCompatActivity {
         }
         showBadRows(Utility.testForConsistency(conditionList, actionList));
 
-        createHeaderColsRules();
-
-        if (this.actionList.isEmpty() && this.conditionList.isEmpty()
-                || isInitialTable()) {
-            Intent initialIntent = new Intent(this, InitialActivity.class);
-
+        if (this.actionList.isEmpty() && this.conditionList.isEmpty()) {
             Condition initialCondition = new Condition(1);
             Action initialAction = new Action(1);
             conditionList.add(initialCondition);
@@ -370,13 +365,9 @@ public class MainActivity extends AppCompatActivity {
             addRowToUi(initialCondition);
             addRowToUi(initialAction);
             updateStorage(getApplicationContext());
-
-            initialIntent.putExtra("conditions", 1);
-            initialIntent.putExtra("actions", 1);
-            initialIntent.putExtra("rules", 1);
-            startActivityForResult(initialIntent, REQUEST_EDIT_TABLE);
         }
 
+        createHeaderColsRules();
         handleDeleteButtonColor();
         handleShowHowTo();
     }
@@ -614,15 +605,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isInitialTable() {
-        if (this.actionList.size() == 1 && this.conditionList.size() == 1
-                && this.actionList.get(0).rules.size() == 1
-                && this.conditionList.get(0).rules.size() == 1
-                && this.actionList.get(0).isEmpty() && this.conditionList.get(0).isEmpty()) {
-            return true;
-        }
-        return false;
-
     private void showWarningSymbol(boolean show) {
         MenuItem warningItem = menu.findItem(R.id.symbolWarning);
         warningItem.setVisible(show);
@@ -839,7 +821,7 @@ public class MainActivity extends AppCompatActivity {
         actionList.add(initialAction);
         addRowToUi(initialCondition);
         addRowToUi(initialAction);
-        addRuleColHeader(1);
+        addRuleColHeader(0);
         handleDeleteButtonColor();
 
         updateStorage(context);
