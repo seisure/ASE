@@ -739,18 +739,18 @@ public class MainActivity extends AppCompatActivity {
         updateStorage(getApplicationContext());
     }
 
-    private void fnOnClickButtonDeleteRow(List list, View buttonDelete, Context context, TableRow rowUI) {
+    private void fnOnClickButtonDeleteRow(List list, View buttonDelete, Context context, TableRow rowUi) {
         if (list.size() > 1) {
             ImageButton button = (ImageButton) buttonDelete;
             boolean isActionListEmpty = actionList.isEmpty();
             boolean isConditionListEmpty = conditionList.isEmpty();
             if (((ArrayList<?>) list).get(0) instanceof Action) {
                 actionList.remove(button.getTag());
-                removeFromTableLayout(rowUI, R.id.tableAction);
+                removeFromTableLayout(rowUi, R.id.tableAction);
                 updateUiRowNumbers(R.id.tableAction, getString(R.string.prefixActionRow));
             } else if (((ArrayList<?>) list).get(0) instanceof Condition) {
                 conditionList.remove(button.getTag());
-                removeFromTableLayout(rowUI, R.id.tableCondition);
+                removeFromTableLayout(rowUi, R.id.tableCondition);
                 updateUiRowNumbers(R.id.tableCondition, getString(R.string.prefixConditionRow));
             }
             boolean isTableEmpty = isActionListEmpty && isConditionListEmpty;
