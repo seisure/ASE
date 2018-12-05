@@ -47,15 +47,18 @@
     <string name="java">Java</string>
     <string name="csharp">C#</string>
     <string name="csv">CSV</string>
-    <string name="javaCode">Java-Code</string>
-    <string name="csharpCode">C#-Code</string>
-    <string name="csvFile">CSV-Datei</string>
     <string name="extJava">.java</string>
     <string name="extCs">.cs</string>
     <string name="extCsv">.csv</string>
     <string name="filename">Dateiname</string>
     <string name="share">Über welchen Weg möchtest Du exportieren?</string>
     <string name="warningNoFormat">Es wurde kein Dateiformat ausgewählt.</string>
+
+    <string-array name="export_types">
+        <item>Java-Code</item>
+        <item>C#-Code</item>
+        <item>CSV-Datei</item>
+    </string-array>
 
     <string name="warningDialogTitle">Regeln fehlen zur Vollständigkeit</string>
     <string name="warningDialogMessage">Folgende Regelkombinationen werden für die

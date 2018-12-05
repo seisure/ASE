@@ -27,7 +27,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -283,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 fnOnClickPositiveButtonClearTable(context);
+                showWarningSymbol(false);
             }
         });
 
@@ -392,6 +393,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         this.menu = menu;
+        checkCompleteness();
         return true;
     }
 
@@ -462,35 +464,22 @@ public class MainActivity extends AppCompatActivity {
         dialogBuilder.setTitle(R.string.export);
         dialogBuilder.setMessage(R.string.exportAskFor);
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_export, null);
+        final Spinner spinner = dialogView.findViewById(R.id.spinnerExportFormat);
         final EditText etFileName = dialogView.findViewById(R.id.editTextFileName);
-        Button btnDoExport = dialogView.findViewById(R.id.buttonDoExport);
-        Button cancel = dialogView.findViewById(R.id.buttonCancelExport);
-        final RadioGroup radioGroup = dialogView.findViewById(R.id.radioGroupExportFormat);
+        final Button cancel = dialogView.findViewById(R.id.buttonCancelExport);
+        final Button btnDoExport = dialogView.findViewById(R.id.buttonDoExport);
+
         dialogBuilder.setView(dialogView);
         final AlertDialog dialog = dialogBuilder.create();
-
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.rbExportJava:
-                        etFileName.setText(getString(R.string.app_name) + getString(R.string.extJava));
-                        break;
-                    case R.id.rbExportCS:
-                        etFileName.setText(getString(R.string.app_name) + getString(R.string.extCs));
-                        break;
-                    case R.id.rbExportCSV:
-                        etFileName.setText(getString(R.string.app_name) + getString(R.string.extCsv));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
 
         btnDoExport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String filename = etFileName.getText().toString();
+                if (filename.isEmpty()) {
+                    filename = getString(R.string.app_name);
+                }
+
                 Codegenerator codegenerator;
                 String code;
 
@@ -501,23 +490,23 @@ public class MainActivity extends AppCompatActivity {
 
                 File fileToShare;
 
-                switch (radioGroup.getCheckedRadioButtonId()) {
-                    case R.id.rbExportJava:
+                switch ((int)spinner.getSelectedItemId()) {
+                    case 0:
                         codegenerator = new Codegenerator();
                         code = codegenerator.generateCode(conditionList, actionList);
-                        fileToShare = FileHelper.buildFile(code, filename);
+                        fileToShare = FileHelper.buildFile(code, filename + getString(R.string.extJava));
                         showShareActivity(fileToShare);
                         dialog.cancel();
                         break;
-                    case R.id.rbExportCS:
+                    case 1:
                         codegenerator = new Codegenerator();
                         code = codegenerator.generateCode(conditionList, actionList);
-                        fileToShare = FileHelper.buildFile(code, filename);
+                        fileToShare = FileHelper.buildFile(code, filename + getString(R.string.extCs));
                         showShareActivity(fileToShare);
                         dialog.cancel();
                         break;
-                    case R.id.rbExportCSV:
-                        fileToShare = FileHelper.exportToCsv(conditionList, actionList, filename);
+                    case 2:
+                        fileToShare = FileHelper.exportToCsv(conditionList, actionList, filename + getString(R.string.extCsv));
                         showShareActivity(fileToShare);
                         dialog.cancel();
                         break;
@@ -709,6 +698,7 @@ public class MainActivity extends AppCompatActivity {
                         updateStorage(getApplicationContext());
                         Toast.makeText(context, R.string.validCSV, Toast.LENGTH_LONG).show();
                     }
+                    checkCompleteness();
                 }
                 break;
             case REQUEST_SHARE:
@@ -898,25 +888,6 @@ public class MainActivity extends AppCompatActivity {
         return Integer.toString(i).length();
     }
 
-    public void getHowToAlertDialog() {
-        try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.howToTitle);
-            builder.setMessage(R.string.howToText);
-
-            builder.setPositiveButton(R.string.howToAccept, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    storageHelper.setInitialStartupFlag(false);
-                    handleMoveToInitialActivity(actionList, conditionList);
-                }
-            });
-            builder.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void setNumberOfRules(int count) {
         clearUiTable();
 
@@ -942,9 +913,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        //File toDelete = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "ASE.csv");
-        //if (toDelete.exists())
-        //    toDelete.delete();
         super.onDestroy();
     }
 
