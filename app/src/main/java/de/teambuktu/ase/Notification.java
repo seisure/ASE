@@ -44,7 +44,8 @@ public class Notification {
         textView.setText(suggestion.toString());
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(20);
-        TextViewCompat.setAutoSizeTextTypeWithDefaults(textView, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+        TextViewCompat.setAutoSizeTextTypeWithDefaults(textView,
+                TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         builder.setView(textView);
         builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
