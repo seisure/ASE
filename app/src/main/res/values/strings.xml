@@ -30,6 +30,7 @@
     <string name="clearTableAskFor">Sollen alle Tabelleninhalte gelöscht werden?</string>
     <string name="clearTableSuccess">Tabelle wurde zurückgesetzt</string>
     <string name="noSemicolons">\';\' ungültig</string>
+    <string name="noZero">\'0\' ungültig, korrigiert auf \'1\'</string>
     <string name="warningConsitency">Widerspruch erkannt</string>
     <string name="validConsistency">Widerspruch gelöst</string>>
     <string name="warningComplete">Bedingungen unvollständig</string>
