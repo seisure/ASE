@@ -20,7 +20,8 @@ public class Suggestion {
 
     private String generateTemplate() {
         StringBuilder sb = new StringBuilder();
-        sb.append("    ");
+
+        sb.append("   \t");
 
         for (int i = 0; i < completenessSuggestions.size(); i++) {
             sb.append(String.format("R%d\t", this.rules + (i + 1)));
@@ -61,7 +62,7 @@ public class Suggestion {
     public String toString() {
         String suggestions = "";
 
-        if (getSuggestionSize() < 10) {
+        if (getSuggestionSize() < 9) {
             String template = generateTemplate();
             suggestions = fillTemplate(template);
         }

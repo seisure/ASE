@@ -284,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 fnOnClickPositiveButtonClearTable(context);
+                showWarningSymbol(false);
             }
         });
 
@@ -391,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         this.menu = menu;
+        checkCompleteness();
         return true;
     }
 
@@ -696,6 +698,7 @@ public class MainActivity extends AppCompatActivity {
                         updateStorage(getApplicationContext());
                         Toast.makeText(context, R.string.validCSV, Toast.LENGTH_LONG).show();
                     }
+                    checkCompleteness();
                 }
                 break;
             case REQUEST_SHARE:
@@ -885,27 +888,6 @@ public class MainActivity extends AppCompatActivity {
         return Integer.toString(i).length();
     }
 
-    public void getHowToAlertDialog() {
-        try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.howToTitle);
-            builder.setMessage(R.string.howToText);
-            final Context context = this.getApplicationContext();
-
-            builder.setPositiveButton(R.string.howToAccept, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    StorageHelper storageHelper = new StorageHelper(context);
-                    storageHelper.setInitialStartupFlag(false);
-                    handleMoveToInitialActivity(actionList, conditionList);
-                }
-            });
-            builder.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void setNumberOfRules(int count) {
         clearUiTable();
 
@@ -931,9 +913,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        //File toDelete = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "ASE.csv");
-        //if (toDelete.exists())
-        //    toDelete.delete();
         super.onDestroy();
     }
 
