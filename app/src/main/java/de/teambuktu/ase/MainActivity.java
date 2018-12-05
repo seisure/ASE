@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_IMPORT_CSV = 2;
     public static final int RESULT_IMPORT = 2;
     public static final int REQUEST_SHARE = 4;
+    private StorageHelper storageHelper;
 
     private File tempSharedFile;
 
@@ -98,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                StorageHelper storageHelper = new StorageHelper(getApplicationContext());
                 storageHelper.update(actionList, conditionList);
             }
         });
@@ -193,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                StorageHelper storageHelper = new StorageHelper(getApplicationContext());
                 storageHelper.update(actionList, conditionList);
             }
         });
@@ -346,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
+        storageHelper = new StorageHelper(this.getApplicationContext());
 
         consistencyToast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
         ArrayList<Action> actions = storageHelper.loadActions();
@@ -396,7 +395,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
         switch (item.getItemId()) {
             case R.id.symbolWarning:
                 Dialog dialog = testCompleteNotification.createWarningDialog(this);
@@ -840,7 +838,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateStorage(Context context) {
-        StorageHelper storageHelper = new StorageHelper(context);
         storageHelper.update(actionList, conditionList);
     }
 
@@ -903,12 +900,10 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.howToTitle);
             builder.setMessage(R.string.howToText);
-            final Context context = this.getApplicationContext();
 
             builder.setPositiveButton(R.string.howToAccept, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    StorageHelper storageHelper = new StorageHelper(context);
                     storageHelper.setInitialStartupFlag(false);
                     handleMoveToInitialActivity(actionList, conditionList);
                 }
@@ -951,7 +946,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleShowHowTo() {
-        StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
         boolean isInitialStartup = storageHelper.getInitialStartup();
         if (isInitialStartup) {
             Intent howToIntent = new Intent(this, HowToActivity.class);
