@@ -11,6 +11,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_IMPORT_CSV = 2;
     public static final int RESULT_IMPORT = 2;
     public static final int REQUEST_SHARE = 4;
+    private static final int REQUEST_EXT_STORAGE_PERMISSION = 5;
     private StorageHelper storageHelper;
 
     private File tempSharedFile;
@@ -445,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
                 handleDeleteButtonColor();
                 return true;
             case R.id.buttonExport:
-                showExportDialog();
+                handleExportPermission();
                 return true;
             case R.id.buttonImportCSV:
                 showImportDialog();
@@ -456,6 +458,16 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void handleExportPermission() {
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_EXT_STORAGE_PERMISSION);
+        } else {
+            showExportDialog();
         }
     }
 
@@ -482,11 +494,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Codegenerator codegenerator;
                 String code;
-
-                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-                }
 
                 File fileToShare;
 
@@ -710,6 +717,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_EXT_STORAGE_PERMISSION:
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    showExportDialog();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     private void fnOnClickActionRule(View v, Action actionToAdd, int ruleIndex) {
