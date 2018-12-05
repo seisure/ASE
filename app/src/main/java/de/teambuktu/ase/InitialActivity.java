@@ -64,8 +64,6 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         clickButton6.setOnClickListener(this);
         Button clickButton7 = findViewById(R.id.buttonCreate);
         clickButton7.setOnClickListener(this);
-        Button clickButton8 = findViewById(R.id.buttonInitialImport);
-        clickButton8.setOnClickListener(this);
         Button clickButton9 = findViewById(R.id.buttonCancel);
         clickButton9.setOnClickListener(this);
     }
@@ -169,11 +167,6 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
                     setResult(RESULT_OK, intent);
                     finish();
                 }
-                break;
-            }
-            case R.id.buttonInitialImport: {
-                setResult(RESULT_IMPORT);
-                finish();
                 break;
             }
             case R.id.buttonCancel:
