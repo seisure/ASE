@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,9 +39,16 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         EditText conditionsText = findViewById(R.id.editTextConditionsToAdd);
         EditText actionsText = findViewById(R.id.editTextActionsToAdd);
         EditText rulesText = findViewById(R.id.editTextRulesToAdd);
+
+        conditionsText.addTextChangedListener(new SettingsTextWatcher(conditionsText));
+        actionsText.addTextChangedListener(new SettingsTextWatcher(actionsText));
+        rulesText.addTextChangedListener(new SettingsTextWatcher(rulesText));
+
         conditionsText.setText(String.valueOf(conditionsIn));
         actionsText.setText(String.valueOf(actionsIn));
         rulesText.setText(String.valueOf(rulesIn));
+
+        conditionsText.setSelection(Integer.toString(conditionsIn).length());
 
         Button clickButton1 = findViewById(R.id.buttonCplus);
         clickButton1.setOnClickListener(this);
@@ -55,8 +64,6 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
         clickButton6.setOnClickListener(this);
         Button clickButton7 = findViewById(R.id.buttonCreate);
         clickButton7.setOnClickListener(this);
-        Button clickButton8 = findViewById(R.id.buttonInitialImport);
-        clickButton8.setOnClickListener(this);
         Button clickButton9 = findViewById(R.id.buttonCancel);
         clickButton9.setOnClickListener(this);
     }
@@ -162,11 +169,6 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             }
-            case R.id.buttonInitialImport: {
-                setResult(RESULT_IMPORT);
-                finish();
-                break;
-            }
             case R.id.buttonCancel:
             case android.R.id.home: {
                 setResult(RESULT_CANCELED);
@@ -187,6 +189,33 @@ public class InitialActivity extends AppCompatActivity implements View.OnClickLi
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public class SettingsTextWatcher implements TextWatcher {
+        private EditText watchedText;
+        
+        private SettingsTextWatcher(EditText editText) {
+            this.watchedText = editText;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable content) {
+            if (content.toString().equals("")) {
+                return;
+            } else if (Integer.parseInt(content.toString()) == 0) {
+                watchedText.setText("1");
+                watchedText.setSelection(1);
+                watchedText.setError(getString(R.string.noZero), null);
+            }
         }
     }
 }

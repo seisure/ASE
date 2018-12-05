@@ -16,6 +16,7 @@ class StorageHelper {
     private static final String ACTIONS = "actions";
     private static final String CONDITIONS = "conditions";
     private static final String INITALSTARTUP = "initialStartup";
+    private static final String CONSISTENCY = "consistency";
 
     private SharedPreferences sharedPreferences;
 
@@ -97,5 +98,14 @@ class StorageHelper {
     void setInitialStartupFlag(boolean initialStartup) {
         sharedPreferences.edit().remove(INITALSTARTUP).apply();
         sharedPreferences.edit().putBoolean(INITALSTARTUP, initialStartup).apply();
+    }
+
+    boolean getConsistencyFlag() {
+        return sharedPreferences.getBoolean(CONSISTENCY, true);
+    }
+
+    void setConsistencyFlag(boolean consistencyFlag) {
+        sharedPreferences.edit().remove(CONSISTENCY).apply();
+        sharedPreferences.edit().putBoolean(CONSISTENCY, consistencyFlag).apply();
     }
 }

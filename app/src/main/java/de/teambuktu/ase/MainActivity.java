@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_IMPORT_CSV = 2;
     public static final int RESULT_IMPORT = 2;
     public static final int REQUEST_SHARE = 4;
+    private StorageHelper storageHelper;
 
     private File tempSharedFile;
 
@@ -98,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                StorageHelper storageHelper = new StorageHelper(getApplicationContext());
                 storageHelper.update(actionList, conditionList);
             }
         });
@@ -193,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                StorageHelper storageHelper = new StorageHelper(getApplicationContext());
                 storageHelper.update(actionList, conditionList);
             }
         });
@@ -311,19 +310,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showBadRows(List<Pair<Integer, Integer>> badRows) {
+        if (!badRows.isEmpty()) {
+            storageHelper.setConsistencyFlag(false);
+            consistencyToast.setText(R.string.warningConsitency);
+            consistencyToast.show();
+        } else if (!storageHelper.getConsistencyFlag()) {
+            storageHelper.setConsistencyFlag(true);
+            consistencyToast.setText(R.string.validConsistency);
+            consistencyToast.show();
+        }
         TableLayout conditionTable = findViewById(R.id.tableCondition);
         TableLayout actionTable = findViewById(R.id.tableAction);
         for (int i = 0; i < conditionTable.getChildCount(); i++) {
             TableRow row = (TableRow) conditionTable.getChildAt(i);
             for (int j = 2; j < row.getChildCount() - 1; j++) {
                 row.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
-            }
-            if (!badRows.isEmpty()) {
-                consistencyToast.setText(R.string.warningConsitency);
-                consistencyToast.show();
-            } else {
-                consistencyToast.setText(R.string.validConsistency);
-                consistencyToast.show();
             }
             for (int j = 0; j < badRows.size(); j++) {
                 row.getChildAt(badRows.get(j).first + 2).setBackgroundColor(getResources().getColor(R.color.colorRedMel));
@@ -347,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
+        storageHelper = new StorageHelper(this.getApplicationContext());
 
         consistencyToast = Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT);
         ArrayList<Action> actions = storageHelper.loadActions();
@@ -398,7 +399,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
         switch (item.getItemId()) {
             case R.id.symbolWarning:
                 Dialog dialog = testCompleteNotification.createWarningDialog(this);
@@ -826,11 +826,11 @@ public class MainActivity extends AppCompatActivity {
         handleDeleteButtonColor();
 
         updateStorage(context);
+        storageHelper.setConsistencyFlag(true);
         Toast.makeText(MainActivity.this, R.string.clearTableSuccess, Toast.LENGTH_SHORT).show();
     }
 
     private void updateStorage(Context context) {
-        StorageHelper storageHelper = new StorageHelper(context);
         storageHelper.update(actionList, conditionList);
     }
 
@@ -917,7 +917,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleShowHowTo() {
-        StorageHelper storageHelper = new StorageHelper(this.getApplicationContext());
         boolean isInitialStartup = storageHelper.getInitialStartup();
         if (isInitialStartup) {
             Intent howToIntent = new Intent(this, HowToActivity.class);
