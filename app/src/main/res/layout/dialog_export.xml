@@ -7,41 +7,17 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackgound">
 
-    <RadioGroup
-        android:id="@+id/radioGroupExportFormat"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/spinnerExportFormat"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:entries="@array/export_types"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <RadioButton
-            android:id="@+id/rbExportJava"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/javaCode"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <RadioButton
-            android:id="@+id/rbExportCS"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/csharpCode"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-        <RadioButton
-            android:id="@+id/rbExportCSV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/csvFile"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-    </RadioGroup>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextFileName"
@@ -56,7 +32,7 @@
         android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroupExportFormat" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerExportFormat" />
 
     <Button
         android:id="@+id/buttonCancelExport"
